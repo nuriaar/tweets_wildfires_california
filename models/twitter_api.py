@@ -13,7 +13,22 @@ api = tweepy.API(auth)
 
 client = tweepy.Client(bearer_token = api_access.bearer_token)
 
-query = 'from:suhemparack -is:retweet'
-tweets = client.search_all_tweets(query = query, max_results = 10)
-for tweet in tweets.data:
-    print(tweet)
+# tweets = client.search_all_tweets(
+#     query = 'california wildfires',
+#     max_results = 10)
+# for tweet in tweets.data:
+#     print(tweet)
+#     print('\n')
+
+# date, coordinates, text
+
+#Get the tweets
+tweets = tweepy.Cursor(             #geocode
+    api.search_tweets,
+    q = 'california wildfires',
+    lang = 'en').items(100000)
+
+#Test to see if some tweets have coordinates
+for tweet in tweets:
+    if tweet.coordinates != None:
+        print(tweet.coordinates)
