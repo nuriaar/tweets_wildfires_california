@@ -4,18 +4,26 @@ Pavan and Jonas
 Script to get Twitter data using tweepy
 '''
 import tweepy
+from tweepy import Client
 import api_access
 import datetime
 
-auth = tweepy.OAuthHandler(api_access.consumer_key, api_access.consumer_secret)
-auth.set_access_token(api_access.access_token, api_access.access_token_secret)
+# auth = tweepy.OAuthHandler(api_access.consumer_key, api_access.consumer_secret)
+# auth.set_access_token(api_access.access_token, api_access.access_token_secret)
 
-api = tweepy.API(auth)
+# api = tweepy.API(auth)
 
-client = tweepy.Client(bearer_token = api_access.bearer_token)
+# client = tweepy.Client(bearer_token = api_access.bearer_token)
+
+client = tweepy.Client(
+    consumer_key = api_access.consumer_key,
+    consumer_secret = api_access.consumer_secret,
+    access_token = api_access.access_token,
+    access_token_secret = api_access.access_token_secret
+)
 
 tweets = tweepy.Cursor(             #geocode
-    api.search_tweets,
+    client.search_tweets,
     q = f'california wildfires',
     lang = 'en').items(10000)
 
