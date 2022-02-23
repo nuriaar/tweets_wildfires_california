@@ -61,6 +61,7 @@ c.execute('''
               report_ac VARCHAR(100),
               gis_acres FLOAT,
               c_method INT,
+              objective VARCHAR(100),
               fire_num INT,
               shape_area FLOAT,
               shape_length FLOAT,
@@ -69,25 +70,22 @@ c.execute('''
           ''')
 
 cal_fires_data = pd.read_csv(calfires_filepath)
-'''
-cal_fires_data['ALARM_DATE'] = pd.to_datetime(cal_fires_data['ALARM_DATE']).dt.date
+cal_fires_data['ALARM_DATE'] = str(pd.to_datetime(cal_fires_data['ALARM_DATE']).dt.date)
+cal_fires_data['CONT_DATE'] = str(pd.to_datetime(cal_fires_data['ALARM_DATE']).dt.date)
 
-rows = []
-with open(calfires_filepath,'r') as file:
-    csv_reader = csv.reader(file, delimiter=',')
-    for row in csv_reader:
-        rows.append(row)
+fires_insert_q = '''
+    INSERT INTO cal_fires (fire_id, year, state, agency, unit_id, fire_name,
+        inc_num, alarm_date, cont_date, cause, comments, report_ac, gis_acres,
+        c_method, objective, fire_num, shape_area, shape_length)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    '''
 
-rows[7]
-cal_fires_data[cal_fires_data['ALARM_DATE'].isna()]
-
-conn.executemany("INSERT INTO t (col1, col2) VALUES (?, ?);", to_db)
-
-
-CONT_DATE,CAUSE,COMMENTS,REPORT_AC,GIS_ACRES,C_METHOD,OBJECTIVE,FIRE_NUM,Shape__Area,Shape__Length
-
-
+for args in cal_fires_data.values.tolist():
+    conn = sqlite3.connect(db_filepath) 
+    c = conn.cursor()
+    c.execute(fires_insert_q, args)
+    c.close()
+    conn.commit
                      
 conn.commit()
 conn.close()
-'''
