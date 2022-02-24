@@ -48,7 +48,7 @@ c = conn.cursor()
 c.execute('''
           CREATE TABLE IF NOT EXISTS cal_fires (
               fire_id INT NOT NULL,
-              year INT NOT NULL,
+              year INT,
               state VARCHAR(10),
               agency VARCHAR(10),
               unit_id VARCHAR(10),
@@ -69,9 +69,13 @@ c.execute('''
           )
           ''')
 
+c.close()
+conn.commit()
+
+# Upload data to cal_fires table
 cal_fires_data = pd.read_csv(calfires_filepath)
 cal_fires_data['ALARM_DATE'] = str(pd.to_datetime(cal_fires_data['ALARM_DATE']).dt.date)
-cal_fires_data['CONT_DATE'] = str(pd.to_datetime(cal_fires_data['ALARM_DATE']).dt.date)
+cal_fires_data['CONT_DATE'] = str(pd.to_datetime(cal_fires_data['CONT_DATE']).dt.date)
 
 fires_insert_q = '''
     INSERT INTO cal_fires (fire_id, year, state, agency, unit_id, fire_name,
@@ -85,7 +89,6 @@ for args in cal_fires_data.values.tolist():
     c = conn.cursor()
     c.execute(fires_insert_q, args)
     c.close()
-    conn.commit
+    conn.commit()
                      
-conn.commit()
-conn.close()
+
