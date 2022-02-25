@@ -1,20 +1,33 @@
-'''
-Pavan and Jonas
 
-Script to get Twitter data using twint
-'''
-import twint
-# Configure
-c = twint.Config()
-c.Location = True
-c.Store_json = True
-c.Output = "test.json"
-c.Search = "wildfires AND California"
-c.Since = "2010-01-01"
-#c.Until = "2020-12-31"
-c.Custom["tweet"] = ['id', 'date', 'time', 'place', 'tweet', 'geo', 'language', 'retweet', 'near', 'geo', 'source', 'retweet_date']
-#c.Geo = (34.052235, -118.243683, 100)
-c.Limit = 1000
+import twitter_api
 
-# Run
-twint.run.Search(c)
+n_years = 4
+starting_year = 2017
+
+start_day = "01"
+end_dates = ["30", "31"]*(n_years*2)
+
+
+start_month_name = ["Jan", "July"]*(n_years*2)
+start_month = ["01", "07"]*(n_years*2)
+
+years = []
+
+for i in range(n_years):
+    year = starting_year + i
+    years.append(str(year))
+    years.append(str(year))
+
+end_month_name = ["June", "Dec"]*(n_years*2)
+end_month = ["06", "12"]*(n_years*2)
+
+for i in range(len(years)):
+
+    start_date = years[i] + "-" + start_month[i] + "-" + start_day + "T00:00:00Z"
+    end_date = years[i] + "-" + end_month[i]  + "-" + end_dates[i] + "T00:00:00Z"
+
+    output_name = years[i] + "_" + start_month_name[i] + "_" + end_month_name[i] + ".csv"
+    
+    responses_list = twitter_api.extract_calfire_tweets(start_date, end_date)
+    twitter_api.extract_tweets_info(responses_list, output_name)
+    print(i)
