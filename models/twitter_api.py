@@ -22,7 +22,7 @@ def extract_calfire_tweets(start_date, end_date):
         expansions = 'geo.place_id', 
         max_results=500):
 
-        time.sleep(30)
+        time.sleep(10)
         tweets.append(tweet)
     
     return tweets
@@ -32,7 +32,9 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
     Extract and update to sql database
     '''
     location_coord = {}
+    coord_state = {} #need to do this so open maps doesn't return error
     location_state = {}
+
     results = []
     count = 0
 
@@ -41,18 +43,23 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
     for response in list_of_tweet_responses:
         if 'places' in response.includes.keys():
             for place in response.includes['places']:
-                location_coord[place.id] = place.geo['bbox']
+                coordinates = place.geo['bbox']
+                lat = str((coordinates[1] + coordinates[3])/ 2)
+                lon = str((coordinates[0] + coordinates[2])/ 2)
+                location_coord[place.id] = lat+","+lon
 
     geolocator = Nominatim(user_agent="geoapiExercises")
 
-    for key, val in location_coord.items():
-        lat = str((val[1] + val[3])/ 2)
-        lon = str((val[0] + val[2])/ 2)
-        location = geolocator.reverse(lat+","+lon)
+    for key, location_str in location_coord.items():
 
-        if location is not None and 'state' in location.raw['address'].keys():
-            state = location.raw['address']['state']
-            location_state[key] = state
+        if not location_str in coord_state.keys():
+            location = geolocator.reverse(location_str)
+
+            if location is not None and 'state' in location.raw['address'].keys():
+                state = location.raw['address']['state']
+                coord_state[location_str] = state
+        else:
+            location_state[key] = coord_state[location_str]
 
     with open(path, "w") as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=",")
@@ -63,12 +70,10 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
                 place_id = ''
                 if tweet['geo'] is not None:
                     place_id = tweet['geo']['place_id']
-                    count += 1
 
                 tweet_id = tweet.id
                 date = tweet.created_at.strftime("%Y-%m-%d")
                 text = tweet.text
                 state = location_state.get(place_id, None)
-                print(state)
                 spamwriter.writerow([tweet_id, date, text, state])
     
