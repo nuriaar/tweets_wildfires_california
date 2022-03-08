@@ -1,3 +1,11 @@
+'''
+TO DO:
+    Get rid of warnings
+    Assert fire_season
+    Make graph pretty
+    Filter on in- or out-of-state
+'''
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import glob
@@ -15,8 +23,8 @@ def line_chart(year, fire_season = True):
     Ouptput:
         line chart (plt): the plot
     '''
-    assert 2010 <= year <= 2020
-    #assert fire_season is bool
+    assert 2015 <= year <= 2021, 'Enter a year between 2015 and 2021'                                 #### DOUBLE CHECK WITH SERGIO
+    assert type(fire_season) is bool, 'fire_season must be a boolean'
 
     plot_data = get_plot_data(year, fire_season)
     
@@ -30,7 +38,7 @@ def line_chart(year, fire_season = True):
     ax2.set_ylabel('Number of Tweets')
     ax1.yaxis.label.set_color('red')
     ax2.yaxis.label.set_color('blue')
-    plt.subplots_adjust(left = 0.15)
+    plt.subplots_adjust(left = 0.15, right = 0.85, bottom = 0.15, top = 0.85)
     plt.savefig('test.png')
 
     return plot_data
@@ -70,15 +78,7 @@ def get_plot_data(year, fire_season):
         for row in twitter_data.itertuples():
             week = row[1].week
             if 1 <= week <= 52:
-                data.loc[week - 1, 'nb_tweets'] += 1
-        data.to_csv(path_or_buf = f'../../data/chart_data/{year}_plot_data.csv')
-
-    if fire_season:
-        relevant_weeks = [w for w in range(18, 45)]
-    else:
-        relevant_weeks = [w for w in range(1, 53)]
-
-    data = data[data['week'].isin(relevant_weeks)]
+                data.loc[week - 1, 'nb_tweets'] += 12020
     return data
 
 
