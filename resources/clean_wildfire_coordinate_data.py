@@ -6,9 +6,8 @@ import json
 import pandas as pd
 from datetime import datetime
 
-import warnings
-warnings.filterwarnings("ignore")
 
+# Minimum level of acres to be considered a large fire
 LARGE_FIRE_ACRES = 1000
 
 json_filepath = "../data/California_Wildland_Fire_Perimeters_(All).geojson"
@@ -21,7 +20,7 @@ wildfires_data = pd.DataFrame(columns = cols)
 
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-for year1 in ["2016"]:
+for year1 in years:
 
     i = 0
     for fire in fires_gj["features"]:
