@@ -21,19 +21,19 @@ wildfires_data = pd.DataFrame(columns = cols)
 
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-for year in years:
+for year1 in ["2016"]:
 
     i = 0
     for fire in fires_gj["features"]:
         print(i)
-        i+= 1
+        i += 1
         properties = fire["properties"]
         year = properties["YEAR_"]
 
-        if year == year:
+        if year == year1:
             gis_acres = properties["GIS_ACRES"]
 
-            if gis_acres > LARGE_FIRE_ACRES:
+            if gis_acres is not None and gis_acres > LARGE_FIRE_ACRES:
                 gis_acres = round(gis_acres, 4)
                 fire_name = properties["FIRE_NAME"]
 
@@ -48,12 +48,14 @@ for year in years:
 
                     if isinstance(polygons[0][0], float):
 
-                        for lon, lat in polygons:
+                        for i, (lon, lat) in enumerate(polygons):
 
-                            # Append coordinates
-                            values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
-                            new_row = pd.DataFrame([values], columns = cols)
-                            wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                            if i%5 == 0:
+
+                                # Append coordinates
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
+                                new_row = pd.DataFrame([values], columns = cols)
+                                wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
                         # Link back to initial coordinate
                         values = [fire_name, gis_acres, year, alarm_date, cont_date, 
@@ -88,6 +90,6 @@ for year in years:
                             new_row = pd.DataFrame([values], columns = cols)
                             wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
-    preprocessed_data_filename = "../data/wildfire_coordinate_data/clean_wildfires_data_" + year + ".csv"
+    preprocessed_data_filename = "../data/wildfire_coordinate_data/clean_wildfires_data_" + year1 + ".csv"
     wildfires_data.to_csv(preprocessed_data_filename, index=False)
 
