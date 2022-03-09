@@ -2,11 +2,19 @@
 Map Visualization of Wildfires
 '''
 
-import pandas as pd
 import plotly.graph_objects as go
 
 
 def map_wildfires(coord_data):
+    '''
+    Create mapbox wildfire visualization. 
+
+    Inputs:
+        coord_data (Pandas dataframe): wildfire data including polygon 
+            coordinates
+    
+    Returns Plotly Graph Object of California map with wildfires
+    '''
 
     fig = go.Figure(go.Scattermapbox(
         mode = "lines", fill = "toself", fillcolor = "orange",
