@@ -1,7 +1,7 @@
 import twitter_api
 
 n_years = 1
-starting_year = 2018
+starting_year = 2021
 
 start_day = "01"
 end_dates = ["30", "31"]*(n_years*2)
@@ -19,7 +19,7 @@ for i in range(n_years):
 end_month_name = ["June", "Dec"]*(n_years*2)
 end_month = ["06", "12"]*(n_years*2)
 
-for i in range(i,len(years)):
+for i in range(i, len(years)):
     print(i)
 
     start_date = years[i] + "-" + start_month[i] + "-" + start_day + "T00:00:00Z"
