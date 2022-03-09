@@ -20,7 +20,7 @@ wildfires_data = pd.DataFrame(columns = cols)
 
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-for year1 in ["2018"]:
+for year1 in years:
 
     i = 0
     for fire in fires_gj["features"]:
