@@ -13,7 +13,7 @@ def create_wordcloud(tweets):
     Create tweets word cloud visualization and save it in .png file.
 
     Inputs: 
-        tweets (Pandas dataframe): tweet data
+        tweets (Pandas Dataframe): tweet data
     '''
 
     words = ' '.join(tweets['Text'].astype(str))

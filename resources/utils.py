@@ -2,7 +2,19 @@ import pandas as pd
 from datetime import datetime
 
 
-def filter_coord_data(coord_data, year, fire_season = False):
+def filter_coord_data(coord_data, year, fire_season = True):
+    '''
+    Filter wildfire coordinates dataframe according to parameters.
+
+    Inputs:
+        coord_data: Pandas dataframe with coordinates
+        year: (int) year to filter
+        fire_season: (boolean) Include tweets only from Fire Season if true. Fire season goes
+            from May to October included.
+    
+    Outputs:
+        coord_data: Pandas dataframe with filtered data
+    '''
 
     coord_data = coord_data[(coord_data['year'] == year) & 
                             (coord_data['fire_season'] == fire_season)]
@@ -11,6 +23,12 @@ def filter_coord_data(coord_data, year, fire_season = False):
 
 
 def read_coord_data():
+    '''
+    Read wildfire coordinate data. 
+        
+    Returns: 
+        coord_data (Pandas Dataframe)
+    '''
 
     data_path = "data/wildfire_coordinate_data/"
     years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
@@ -32,7 +50,7 @@ def read_tweets_data(path):
         path (str)
         
     Returns: 
-        Tweets (Pandas Dataframe)
+        tweets (Pandas Dataframe)
     '''
 
     dateparse = lambda x: datetime.strptime(x, '%Y-%m-%d')
