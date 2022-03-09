@@ -10,6 +10,7 @@ from resources.utils import read_tweets_data, filter_coord_data, read_coord_data
 from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
 from ui.map_viz import map_wildfires
 
+
 # LOAD DATA WHEN LOADING DASH - NO NEED TO REDO WITH CHANGING INPUTS
 
 tweets_data_filepath = "data/twitter_data/"
@@ -25,16 +26,16 @@ coord_data = read_coord_data()
 # !!! get inputs for year, fire_season, state_info
 
 if state_info:
-    tweets = filter_coord_data(tweets_state_data, year, state_info, fire_season)
+    filtered_tweets = filter_coord_data(tweets_state_data, year, state_info, fire_season)
 else:
-    tweets = filter_coord_data(tweets_sample_data, year, state_info, fire_season)
+    filtered_tweets = filter_coord_data(tweets_sample_data, year, state_info, fire_season)
 
 filtered_coord_data = filter_coord_data(coord_data, year, fire_season)
 
 # CREATE DATA VISUALIZATIONS
-create_wordcloud(tweets)
-lda_table = create_lda_table(tweets)
-map = map_wildfires(filtered_coord_data, year, fire_season)
+create_wordcloud(filtered_tweets)
+lda_table = create_lda_table(filtered_tweets)
+map = map_wildfires(filtered_coord_data)
 
 
 # DASH 
