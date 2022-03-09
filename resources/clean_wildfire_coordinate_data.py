@@ -15,12 +15,12 @@ json_filepath = "../data/California_Wildland_Fire_Perimeters_(All).geojson"
 with open(json_filepath) as f:
     fires_gj = json.load(f)
 
-cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "lat", "lon"]
+cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "fire_season", "lat", "lon"]
 wildfires_data = pd.DataFrame(columns = cols)
 
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-for year1 in years:
+for year1 in ["2015"]:
 
     i = 0
     for fire in fires_gj["features"]:
@@ -39,9 +39,16 @@ for year1 in years:
                 alarm_date = properties["ALARM_DATE"]
                 cont_date = properties["CONT_DATE"]
                 if alarm_date is not None:
-                    alarm_date = str(datetime.strptime(alarm_date, "%Y-%m-%dT%H:%M:%SZ").date())
+                    alarm_date = datetime.strptime(alarm_date, "%Y-%m-%dT%H:%M:%SZ")
                 if cont_date is not None:
-                    cont_date = str(datetime.strptime(cont_date, "%Y-%m-%dT%H:%M:%SZ").date())
+                    cont_date = datetime.strptime(cont_date, "%Y-%m-%dT%H:%M:%SZ")
+                
+                fire_season = False
+                if cont_date.dt.month >= 5 and alarm_date.dt.month < 11:
+                    fire_season = True
+                
+                alarm_date = alarm_date.date()
+                cont_date = cont_date.date()
 
                 for polygons in fire["geometry"]["coordinates"]:
 
@@ -52,12 +59,12 @@ for year1 in years:
                             if i%5 == 0:
 
                                 # Append coordinates
-                                values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season, lat, lon]
                                 new_row = pd.DataFrame([values], columns = cols)
                                 wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
                         # Link back to initial coordinate
-                        values = [fire_name, gis_acres, year, alarm_date, cont_date, 
+                        values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
                                 polygons[0][1], polygons[0][0]]
                         new_row = pd.DataFrame([values], columns = cols)
                         wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
@@ -74,12 +81,12 @@ for year1 in years:
                             for lon, lat in polygon:
 
                                 # Append coordinates
-                                values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season, lat, lon]
                                 new_row = pd.DataFrame([values], columns = cols)
                                 wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
                             
                             # Link back to initial coordinate
-                            values = [fire_name, gis_acres, year, alarm_date, cont_date, 
+                            values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
                                     polygons[0][1], polygons[0][0]]
                             new_row = pd.DataFrame([values], columns = cols)
                             wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
