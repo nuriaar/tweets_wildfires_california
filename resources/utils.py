@@ -37,6 +37,6 @@ def read_data(year, state_info = False, fire_season = False):
         elif state_info == "out":
             tweets = tweets.loc[tweets['State'] != 'California']
         else:
-            raise TypeError("Arg State has to be in or out")
+            raise TypeError("Arg State has to be 'in' or 'out'")
     
     return tweets
