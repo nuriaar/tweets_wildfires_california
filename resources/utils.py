@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 
-def read_data(start_year, end_year, state_info = False, fire_season = False):
+def read_data(year, state_info = False, fire_season = False):
     '''
     Read data and filter
     '''
@@ -14,10 +14,7 @@ def read_data(start_year, end_year, state_info = False, fire_season = False):
 
     tweets = pd.read_csv(path, parse_dates = ['Date'], date_parser = dateparse)
 
-    start_date = datetime(start_year, 1, 1)
-    end_date = datetime(end_year, 12, 31)
-
-    mask = (tweets['Date'] >= start_date) & (tweets['Date'] <= end_date)
+    mask = (tweets['Date'].dt.year == year)
     tweets = tweets.loc[mask]
 
     if fire_season:
@@ -30,6 +27,6 @@ def read_data(start_year, end_year, state_info = False, fire_season = False):
         elif state_info == "OUT":
             tweets = tweets.loc[tweets['State'] != 'California']
         else:
-            raise TypeError("State has to be IN or OUT")
+            raise TypeError("Arg State has to be IN or OUT")
     
     return tweets
