@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 
 def retrieve_topics(year, state_info = False, fire_season = False):
     '''
-    Retrieve main 3 topics from tweets (10 words per topic) and visualize a table
+    Retrieve main 3 topics from tweets (7 words per topic) and visualize a table
 
     Inputs:
         year: (int) year to filter
@@ -38,7 +38,7 @@ def retrieve_topics(year, state_info = False, fire_season = False):
     
 
     #extract topics
-    topics = lda_model.show_topics(3, 10, formatted = False)
+    topics = lda_model.show_topics(3, 7, formatted = False)
     topics_words = [([word[0] for word in topic[1]]) for topic in topics]
 
     #visualize topics
