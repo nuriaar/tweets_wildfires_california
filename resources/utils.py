@@ -3,7 +3,17 @@ from datetime import datetime
 
 def read_data(year, state_info = False, fire_season = False):
     '''
-    Read data and filter
+    Read twitter data and filter according to parameters. 
+
+    Inputs:
+        year: (int) year to filter
+        state_info: (str) "in" for California tweets, "out" for out of state tweets.
+            If it's false, it retrieves all tweets (including those without location info)
+        fire_season: (boolean) Include tweets only from Fire Season if true. Fire season goes
+            from May to October included.
+    
+    Outputs:
+        tweets: Pandas dataframe with filtered data
     '''
     if state_info:
         path = "data/twitter_data/tweets_state.csv"
@@ -22,11 +32,11 @@ def read_data(year, state_info = False, fire_season = False):
         tweets = tweets[mask_season]
     
     if state_info:
-        if state_info == "IN":
+        if state_info == "in":
             tweets = tweets.loc[tweets['State'] == 'California']
-        elif state_info == "OUT":
+        elif state_info == "out":
             tweets = tweets.loc[tweets['State'] != 'California']
         else:
-            raise TypeError("Arg State has to be IN or OUT")
+            raise TypeError("Arg State has to be in or out")
     
     return tweets
