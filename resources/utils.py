@@ -20,9 +20,6 @@ def read_data(start_year, end_year, state_info = False, fire_season = False):
     mask = (tweets['Date'] >= start_date) & (tweets['Date'] <= end_date)
     tweets = tweets.loc[mask]
 
-    start_fire_season = datetime(2015, 1, 1)
-    end_fire_season = datetime(2016, 12, 31)
-
     if fire_season:
         mask_season = (tweets['Date'].dt.month >= 5) & (tweets['Date'].dt.month < 11)
         tweets = tweets[mask_season]
