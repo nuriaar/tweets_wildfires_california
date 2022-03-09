@@ -5,17 +5,12 @@ Map Visualization of Wildfires
 import pandas as pd
 import plotly.graph_objects as go
 
-data_path = "data/wildfire_coordinate_data/"
-years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
-cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "lat", "lon"]
-coord_data = pd.DataFrame(columns = cols)
-
-for year in years:
-    coord_data_year = pd.read_csv(data_path + "clean_wildfires_data_" + year + ".csv")
-    coord_data = pd.concat([coord_data, coord_data_year])
+from resources.utils import filter_coord_data
 
 # Map
 def map_wildfires(coord_data, year, fire_season):
+
+    coord_data = filter_coord_data(coord_data, year, fire_season)
 
     fig = go.Figure(go.Scattermapbox(
         mode = "lines", fill = "toself", fillcolor = "orange",
@@ -39,16 +34,3 @@ def map_wildfires(coord_data, year, fire_season):
     return fig
 
 
-
-# ------ DASH ------
-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-
-app = dash.Dash()
-app.layout = html.Div([
-    dcc.Graph(figure = fig)
-])
-
-app.run_server(debug=True, use_reloader=False)

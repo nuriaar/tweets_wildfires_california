@@ -10,7 +10,7 @@ from datetime import datetime
 # Minimum level of acres to be considered a large fire
 LARGE_FIRE_ACRES = 1000
 
-json_filepath = "../data/California_Wildland_Fire_Perimeters_(All).geojson"
+json_filepath = "data/California_Wildland_Fire_Perimeters_(All).geojson"
 
 with open(json_filepath) as f:
     fires_gj = json.load(f)
@@ -20,7 +20,7 @@ wildfires_data = pd.DataFrame(columns = cols)
 
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-for year1 in years:
+for year1 in ["2018"]:
 
     i = 0
     for fire in fires_gj["features"]:
@@ -69,7 +69,8 @@ for year1 in years:
                             wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
                             # Space between polygons
-                            values = [None] * len(cols)
+                            values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                    None, None]
                             new_row = pd.DataFrame([values], columns = cols)
                             wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
                         
@@ -91,10 +92,11 @@ for year1 in years:
                                 wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
                                 # Space between polygons
-                                values = [None] * len(cols)
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                    None, None]
                                 new_row = pd.DataFrame([values], columns = cols)
                                 wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
-    preprocessed_data_filename = "../data/wildfire_coordinate_data/clean_wildfires_data_" + year1 + ".csv"
+    preprocessed_data_filename = "data/wildfire_coordinate_data/clean_wildfires_data_" + year1 + ".csv"
     wildfires_data.to_csv(preprocessed_data_filename, index=False)
 
