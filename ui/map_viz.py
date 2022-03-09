@@ -5,12 +5,8 @@ Map Visualization of Wildfires
 import pandas as pd
 import plotly.graph_objects as go
 
-from resources.utils import filter_coord_data
 
-# Map
-def map_wildfires(coord_data, year, fire_season):
-
-    coord_data = filter_coord_data(coord_data, year, fire_season)
+def map_wildfires(coord_data):
 
     fig = go.Figure(go.Scattermapbox(
         mode = "lines", fill = "toself", fillcolor = "orange",
@@ -32,5 +28,3 @@ def map_wildfires(coord_data, year, fire_season):
         margin = {'l':0, 'r':0, 'b':0, 't':0})
 
     return fig
-
-
