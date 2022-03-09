@@ -1,5 +1,5 @@
 '''
-Dash Test - Núria
+Dash Test
 '''
 
 import dash

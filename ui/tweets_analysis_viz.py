@@ -5,7 +5,7 @@ Tweets Text Analytics Visualizations
 from wordcloud import WordCloud
 import plotly.graph_objects as go
 
-from resources import retrieve_topics
+from resources.lda import retrieve_topics
 
 
 def create_wordcloud(tweets):
