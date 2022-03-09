@@ -10,8 +10,8 @@ import nltk
 nltk.download('stopwords')
 
 all_tweets = pd.DataFrame()
-path = "data/"
-filenames = listdir("data/")
+path = "data/twitter_data/"
+filenames = listdir(path)
 
 dateparse = lambda x: datetime.strptime(x, '%Y-%m-%d')
 
@@ -30,26 +30,11 @@ for name in filenames:
             all_tweets = pd.concat([all_tweets, df], ignore_index = True)
 
 sample = all_tweets.sample(n=500000)
-sample.to_csv("data/sample_clean_data.csv")
+sample.to_csv("data/twitter_data/sample_clean_data.csv")
 
 tweets_state = all_tweets.dropna()
-tweets_state.to_csv('data/tweets_state.csv')
-
-import gensim.corpora as corpora
-dictionary = corpora.Dictionary(all_tweets['Text'])
-texts = all_tweets['Text']
-
-corpus = [dictionary.doc2bow(text) for text in texts]
-
-from pprint import pprint
-    # number of topics
-    num_topics = 10
-    # Build LDA model
-    lda_model = gensim.models.LdaMulticore(corpus=corpus,
-                                            id2word=dictionary,
-                                            num_topics=num_topics)
-
- doc_lda = lda_model[corpus]    
+tweets_state.to_csv('data/twitter_data/tweets_state.csv')
+   
 
  def cleaning_data(col, stopwords, stem = False):
     '''
@@ -75,8 +60,8 @@ from pprint import pprint
 
     if stem:
         st = PorterStemmer()
-        col = col.apply(lambda x: [st.stem(word) for word in x if not word in stopwords])
+        col = col.apply(lambda x: " ".join([st.stem(word) for word in x if not word in stopwords]))
     else:
-        col = col.apply(lambda x: [word for word in x if not word in stopwords])
+        col = col.apply(lambda x: " ".join([word for word in x if not word in stopwords]))
     
     return col
