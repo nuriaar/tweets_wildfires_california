@@ -5,8 +5,7 @@ Map Visualization of Wildfires
 import pandas as pd
 import plotly.graph_objects as go
 
-
-data_path = "../data/wildfire_coordinate_data/"
+data_path = "data/wildfire_coordinate_data/"
 years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "lat", "lon"]
 coord_data = pd.DataFrame(columns = cols)
@@ -16,7 +15,7 @@ for year in years:
     coord_data = pd.concat([coord_data, coord_data_year])
 
 # Map
-def map_wildfires(coord_data):
+def map_wildfires(coord_data, year, fire_season):
 
     fig = go.Figure(go.Scattermapbox(
         mode = "lines", fill = "toself", fillcolor = "orange",
