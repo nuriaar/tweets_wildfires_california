@@ -26,7 +26,13 @@ def read_coord_data():
 
 def read_tweets_data(path):
     '''
-    Read data
+    Read twitter data from path.
+    
+    Input:
+        path (str)
+        
+    Returns: 
+        Tweets (Pandas Dataframe)
     '''
 
     dateparse = lambda x: datetime.strptime(x, '%Y-%m-%d')
@@ -36,11 +42,22 @@ def read_tweets_data(path):
 
 
 def filter_tweets_data(tweets, year, state_info = True, fire_season = True):
+    '''
+    Filter tweets dataframe according to parameters.
 
-    start_date = datetime(year, 1, 1)
-    end_date = datetime(year, 12, 31)
+    Inputs:
+        tweets: Pandas dataframe with tweets
+        year: (int) year to filter
+        state_info: (str) "in" for California tweets, "out" for out of state tweets.
+            If it's false, it retrieves all tweets (including those without location info)
+        fire_season: (boolean) Include tweets only from Fire Season if true. Fire season goes
+            from May to October included.
+    
+    Outputs:
+        tweets: Pandas dataframe with filtered data
+    '''
 
-    mask = (tweets['Date'] >= start_date) & (tweets['Date'] <= end_date)
+    mask = (tweets['Date'].dt.year == year)
     tweets = tweets.loc[mask]
 
     if fire_season:
@@ -48,12 +65,12 @@ def filter_tweets_data(tweets, year, state_info = True, fire_season = True):
         tweets = tweets[mask_season]
     
     if state_info:
-        if state_info == "IN":
+        if state_info == "in":
             tweets = tweets.loc[tweets['State'] == 'California']
-        elif state_info == "OUT":
+        elif state_info == "out":
             tweets = tweets.loc[tweets['State'] != 'California']
         else:
-            raise TypeError("State has to be IN or OUT")
+            raise TypeError("Arg State has to be 'in' or 'out'")
     
     return tweets
 
