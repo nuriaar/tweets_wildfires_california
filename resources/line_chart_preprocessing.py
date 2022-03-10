@@ -17,10 +17,10 @@ def get_plot_data(year):
     Ouptput:
         data (pd.DataFrame): the relevant data  
     '''
-    long_filenames = glob.glob('../data/chart_data/*'.format('csv'))
-    filenames = [filename.split('\\')[-1] for filename in long_filenames]                   ### might run into issues because of the backslash
+    long_filenames = glob.glob('data/chart_data/*'.format('csv'))
+    filenames = [filename[-18:] for filename in long_filenames]                   ### might run into issues because of the backslash
     if f'{year}_plot_data.csv' in filenames:                                                ### sys or path module os.path
-        data = pd.read_csv(f'../data/chart_data/{year}_plot_data.csv', index_col = 'Unnamed: 0')
+        data = pd.read_csv(f'data/chart_data/{year}_plot_data.csv', index_col = 'Unnamed: 0')
     else:
         wildfire_data = get_wildfire_data()
         twitter_data = get_twitter_data(year)
@@ -36,7 +36,7 @@ def get_plot_data(year):
             week = row[1].week
             if 1 <= week <= 52:
                 data.loc[week - 1, 'nb_tweets'] += 1
-        data.to_csv(path_or_buf = f'../data/chart_data/{year}_plot_data.csv')
+        data.to_csv(path_or_buf = f'data/chart_data/{year}_plot_data.csv')
     return data
 
 
@@ -50,7 +50,7 @@ def get_wildfire_data():
     Output:
         wildfire_data (pd.DataFrame): the relevant wildfire data
     '''
-    wildfire_data = pd.read_csv('../data/Cal_Fires.csv', usecols = ['YEAR_', 'STATE', 'ALARM_DATE', 'CONT_DATE', 'GIS_ACRES'])
+    wildfire_data = pd.read_csv('data/Cal_Fires.csv', usecols = ['YEAR_', 'STATE', 'ALARM_DATE', 'CONT_DATE', 'GIS_ACRES'])
     wildfire_data.rename(columns = {
         'YEAR_': 'year',
         'STATE': 'state',
@@ -75,7 +75,7 @@ def get_twitter_data(year):
     Output:
         twitter_data (pd.DataFrame): the relevant twitter data
     '''
-    twitter_filenames = glob.glob(f'../data/twitter_data/{year}*'.format('csv'))
+    twitter_filenames = glob.glob(f'data/twitter_data/{year}*'.format('csv'))
     twitter_data = pd.concat([pd.read_csv(file, usecols = ['Date']) for file in twitter_filenames])
     twitter_data.rename(columns = {'Date': 'date'}, inplace = True)
     twitter_data['date'] = pd.to_datetime(twitter_data['date'], yearfirst = True, format = '%w', infer_datetime_format=True)
