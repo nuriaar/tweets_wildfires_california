@@ -31,6 +31,16 @@ def create_wordcloud(tweets):
 
 
 def create_lda_table(tweets):
+    '''
+    For a Pandas Dataframe with tweets, retrieve topics and create plotly table 
+    with main topics and words associated to those topics
+
+    Input:
+        Pandas Dataframe
+
+    Returns:
+        Plotly figure 
+    '''
     
     topics_words = retrieve_topics(tweets)
 
