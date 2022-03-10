@@ -6,88 +6,104 @@ import json
 import pandas as pd
 from datetime import datetime
 
-import warnings
-warnings.filterwarnings("ignore")
 
+# Minimum level of acres to be considered a large fire
 LARGE_FIRE_ACRES = 1000
 
-json_filepath = "../data/California_Wildland_Fire_Perimeters_(All).geojson"
+json_filepath = "data/California_Wildland_Fire_Perimeters_(All).geojson"
+YEARS = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
 
-with open(json_filepath) as f:
-    fires_gj = json.load(f)
+def preprocess_wildfire_coord_data(path):
+    '''
+    Create csv files with wildfire coordinate data from geojson file to input
+    map visualization.
 
-cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "lat", "lon"]
-wildfires_data = pd.DataFrame(columns = cols)
+    Input:
+        path (string): json filepath
+    '''
 
-years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+    with open(path) as f:
+        fires_gj = json.load(f)
 
-for year in years:
+    cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "fire_season", "lat", "lon"]
+    wildfires_data = pd.DataFrame(columns = cols)
 
-    i = 0
-    for fire in fires_gj["features"]:
-        print(i)
-        i+= 1
-        properties = fire["properties"]
-        year = properties["YEAR_"]
+    for year1 in YEARS:
 
-        if year == year:
-            gis_acres = properties["GIS_ACRES"]
+        for fire in fires_gj["features"]:
 
-            if gis_acres > LARGE_FIRE_ACRES:
-                gis_acres = round(gis_acres, 4)
-                fire_name = properties["FIRE_NAME"]
+            properties = fire["properties"]
+            year = properties["YEAR_"]
 
-                alarm_date = properties["ALARM_DATE"]
-                cont_date = properties["CONT_DATE"]
-                if alarm_date is not None:
-                    alarm_date = str(datetime.strptime(alarm_date, "%Y-%m-%dT%H:%M:%SZ").date())
-                if cont_date is not None:
-                    cont_date = str(datetime.strptime(cont_date, "%Y-%m-%dT%H:%M:%SZ").date())
+            if year == year1:
+                gis_acres = properties["GIS_ACRES"]
 
-                for polygons in fire["geometry"]["coordinates"]:
+                if gis_acres is not None and gis_acres > LARGE_FIRE_ACRES:
+                    gis_acres = round(gis_acres, 4)
+                    fire_name = properties["FIRE_NAME"]
 
-                    if isinstance(polygons[0][0], float):
+                    alarm_date = properties["ALARM_DATE"]
+                    cont_date = properties["CONT_DATE"]
 
-                        for lon, lat in polygons:
+                    if alarm_date is not None and cont_date is not None:
+                        if alarm_date is not None:
+                            alarm_date = datetime.strptime(alarm_date, "%Y-%m-%dT%H:%M:%SZ").date()
+                        if cont_date is not None:
+                            cont_date = datetime.strptime(cont_date, "%Y-%m-%dT%H:%M:%SZ").date()
+                        
+                        fire_season = False
+                        if cont_date.month >= 5 & alarm_date.month < 11:
+                            fire_season = True
 
-                            # Append coordinates
-                            values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
-                            new_row = pd.DataFrame([values], columns = cols)
-                            wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                        for polygons in fire["geometry"]["coordinates"]:
 
-                        # Link back to initial coordinate
-                        values = [fire_name, gis_acres, year, alarm_date, cont_date, 
-                                polygons[0][1], polygons[0][0]]
-                        new_row = pd.DataFrame([values], columns = cols)
-                        wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                            if isinstance(polygons[0][0], float):
 
-                        # Space between polygons
-                        values = [None] * len(cols)
-                        new_row = pd.DataFrame([values], columns = cols)
-                        wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
-                    
-                    else:
+                                for i, (lon, lat) in enumerate(polygons):
 
-                        for polygon in polygons:
+                                    # Take only 20% of data points for efficiency
+                                    if i % 5 == 0:
 
-                            for lon, lat in polygon:
+                                        # Append coordinates
+                                        values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season, lat, lon]
+                                        new_row = pd.DataFrame([values], columns = cols)
+                                        wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
 
-                                # Append coordinates
-                                values = [fire_name, gis_acres, year, alarm_date, cont_date, lat, lon]
+                                # Link back to initial coordinate
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                        polygons[0][1], polygons[0][0]]
+                                new_row = pd.DataFrame([values], columns = cols)
+                                wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+
+                                # Space between polygons
+                                values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                        None, None]
                                 new_row = pd.DataFrame([values], columns = cols)
                                 wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
                             
-                            # Link back to initial coordinate
-                            values = [fire_name, gis_acres, year, alarm_date, cont_date, 
-                                    polygons[0][1], polygons[0][0]]
-                            new_row = pd.DataFrame([values], columns = cols)
-                            wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                            else:
 
-                            # Space between polygons
-                            values = [None] * len(cols)
-                            new_row = pd.DataFrame([values], columns = cols)
-                            wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                                for polygon in polygons:
 
-    preprocessed_data_filename = "../data/wildfire_coordinate_data/clean_wildfires_data_" + year + ".csv"
-    wildfires_data.to_csv(preprocessed_data_filename, index=False)
+                                    for lon, lat in polygon:
+
+                                        # Append coordinates
+                                        values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season, lat, lon]
+                                        new_row = pd.DataFrame([values], columns = cols)
+                                        wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+                                    
+                                    # Link back to initial coordinate
+                                    values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                            polygons[0][1], polygons[0][0]]
+                                    new_row = pd.DataFrame([values], columns = cols)
+                                    wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+
+                                    # Space between polygons
+                                    values = [fire_name, gis_acres, year, alarm_date, cont_date, fire_season,
+                                        None, None]
+                                    new_row = pd.DataFrame([values], columns = cols)
+                                    wildfires_data = pd.concat([wildfires_data, new_row], ignore_index=True)
+
+        preprocessed_data_filename = "data/wildfire_coordinate_data/clean_wildfires_data_" + year1 + ".csv"
+        wildfires_data.to_csv(preprocessed_data_filename, index=False)
 
