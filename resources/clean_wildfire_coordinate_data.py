@@ -5,6 +5,7 @@ Preprocess wildfire coordinate data for map visualization
 import json
 import pandas as pd
 from datetime import datetime
+import plotly.graph_objects as go
 
 
 # Minimum level of acres to be considered a large fire
@@ -12,6 +13,8 @@ LARGE_FIRE_ACRES = 1000
 
 json_filepath = "data/California_Wildland_Fire_Perimeters_(All).geojson"
 YEARS = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+
+df = gpd.read_file(json_filepath)
 
 def preprocess_wildfire_coord_data(path):
     '''
