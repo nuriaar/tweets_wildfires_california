@@ -1,17 +1,9 @@
-'''
-TO DO:
-    Get rid of warnings
-    Assert fire_season
-    Make graph pretty
-    Filter on in- or out-of-state
-'''
 import sys
 sys.path.append('../')
 
 import matplotlib.pyplot as plt
 from resources.line_chart_preprocessing import get_plot_data
 #import proj-larry_on_fire.resources.line_chart_preprocessing
-import glob
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
@@ -20,13 +12,11 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-# year = 2017
-# fig = line_chart(year, fire_season = True)
 
 app = dash.Dash()
 app.layout = html.Div([
     dcc.Dropdown(id = 'year', options = [{'label': x, 'value': x} for x in [2015, 2016, 2017, 2018, 2019, 2020, 2021]], value = 2021),
-    dcc.RadioItems(id = 'fire_season', options = [{'label': 'Entire Year', 'value': False}, {'label': 'Fire Season Only', 'value': True}], value = False),
+    dcc.RadioItems(id = 'fire_season', options = [{'label': 'Entire Year', 'value': False}, {'label': 'Fire Season Only', 'value': True}], value = False, labelStyle={'display': 'block'}),
     dcc.Graph(id = 'line_chart')
 ])
 
@@ -62,14 +52,20 @@ def line_chart(year, fire_season = True):
     figure.add_trace(go.Scatter(\
         x = plot_data['week'], y = plot_data['acres'], name = 'burned_acres',),\
              secondary_y = False,)
-    figure.update_layout(title_text = f'Acres Burned and Tweet Intensity in {year}')
-    figure.update_xaxes(title_text = 'Week')
-    figure.update_yaxes(title_text = 'Burned Acres', secondary_y = False)
-    figure.update_yaxes(title_text = 'Number of Tweets', secondary_y = True)
-    figure.write_image('ui/line_chart.png')
-    return figure
+    figure.update_layout(title_text = f'Acres Burned and Tweet Intensity in {year}', title_font = dict(color = '#4ACC32', size = 50))
+    figure.update_xaxes(title_text = 'Week', showgrid = False, color = '#D8D8D8',)
+    figure.update_yaxes(title_text = 'Burned Acres', secondary_y = False, showgrid = False, color = '#ff2a04')
+    figure.update_yaxes(title_text = 'Number of Tweets', secondary_y = True, showgrid = False, color = '#1DA1F2')
+    figure.update_layout(
+        paper_bgcolor = '#787878',
+        plot_bgcolor = '#9A9A9A',
+        showlegend = False)
+    #figure.write_image('ui/line_chart.png')
     #fig.show()
-app.run_server(debug=True, use_reloader=False)
+    return figure
+
+
+app.run_server(debug = True, use_reloader = False)
 
     # fig, ax1 = plt.subplots()
     # ax1.plot('week', 'acres', data = plot_data, color = 'red')
