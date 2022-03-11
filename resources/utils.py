@@ -3,6 +3,7 @@ Utility functions
 '''
 
 import pandas as pd
+import geopandas as gpd
 from datetime import datetime
 
 
@@ -36,8 +37,10 @@ def read_coord_data():
         coord_data (Pandas Dataframe)
     '''
 
-    data_path = "data/clean_wildfires_data.csv"
-    coord_data = pd.read_csv(data_path)
+    data_path = "data/clean_wildfires_data.geojson"
+    coord_data = gpd.read_file(data_path)
+
+    coord_data["year"] = coord_data["year"].astype(int)
 
     return coord_data
 

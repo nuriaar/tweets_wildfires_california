@@ -6,6 +6,7 @@ import plotly.express as px
 
 from resources.utils import filter_coord_data
 
+
 def map_wildfires(coord_data, year, fire_season):
     '''
     Create mapbox wildfire visualization. 
@@ -22,11 +23,9 @@ def map_wildfires(coord_data, year, fire_season):
 
     coord_data = filter_coord_data(coord_data, year, fire_season)
 
-    print(coord_data)
-
     fig = px.choropleth_mapbox(
         coord_data, 
-        geojson=coord_data.geometry.to_json(),
+        geojson = coord_data.geometry,
         locations = coord_data.index,
         color_discrete_sequence = ["red"] * coord_data.shape[0],
         mapbox_style = "stamen-terrain",

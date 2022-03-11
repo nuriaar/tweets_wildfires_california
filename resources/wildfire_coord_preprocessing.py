@@ -12,7 +12,7 @@ LARGE_FIRE_ACRES = 1000
 
 # Filenames
 JSON_FILEPATH = "data/California_Wildland_Fire_Perimeters_(All).geojson"
-CSV_FILEPATH = "data/clean_wildfires_data.csv"
+NEW_JSON_FILEPATH = "data/clean_wildfires_data.geojson"
 
 
 def is_fire_season(row):
@@ -56,7 +56,7 @@ def preprocess_wildfire_coord_data():
 
     coord_data.geometry = coord_data.geometry.simplify(0.01)
 
-    coord_data.to_csv(CSV_FILEPATH, index = False)
+    coord_data.to_file(NEW_JSON_FILEPATH, driver='GeoJSON')
 
 
 '''
