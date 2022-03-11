@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 
-def filter_coord_data(coord_data, year, fire_season = False:
+def filter_coord_data(coord_data, year, fire_season = False):
     '''
     Filter wildfire coordinates dataframe according to parameters.
 
