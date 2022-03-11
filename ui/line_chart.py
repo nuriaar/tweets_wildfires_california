@@ -6,14 +6,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def line_chart_proxy(year, fire_season = True):
-    assert 2015 <= year <= 2021, 'Enter a year between 2015 and 2021'
-    assert type(fire_season) is bool, 'fire_season must be a boolean'
-    plot_data = filter_plot_data(year, fire_season, get_plot_data())
-    return line_chart(year, plot_data)
-
-
-def line_chart(year, plot_data):
+def line_chart(year, fire_season = True):
     '''
     Creates a line chart of the tweet and wildfire intensity.
 
@@ -24,6 +17,7 @@ def line_chart(year, plot_data):
     Ouptput:
         line chart (fig): the plot
     '''
+    plot_data = filter_plot_data(year, fire_season, get_plot_data())
     figure = make_subplots(specs = [[{'secondary_y': True}]])
     figure.add_trace(go.Scatter(\
         x = plot_data['week'], y = plot_data['nb_tweets'], name = 'nb_tweets', line_color = '#1DA1F2'),\
