@@ -23,7 +23,7 @@ def filter_coord_data(coord_data, year, fire_season = False):
 
     coord_data = coord_data[coord_data['year'] == year]
     
-    if fire_season == True:
+    if fire_season:
          coord_data = coord_data[coord_data['fire_season'] == True]
 
     coord_data = coord_data.reset_index()
