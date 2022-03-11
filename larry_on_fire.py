@@ -35,7 +35,7 @@ filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = False, yea
 
 # Word cloud
 create_wordcloud(filtered_tweets) # Word Cloud
-image_filepath = ""
+image_filepath = "ui/"
 image_filename = 'tweets_wordcloud.png'
 encoded_image = base64.b64encode(open(image_filepath + image_filename, 'rb').read())
 
