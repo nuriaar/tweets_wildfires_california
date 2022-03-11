@@ -12,7 +12,7 @@ def line_chart(year, fire_season = True):
 
     Input:
         year (int): the year
-        plot_data (pd.DataFrame): relevant data for the line chart
+        fire_season (bool): relevant data for the line chart
 
     Ouptput:
         line chart (fig): the plot
