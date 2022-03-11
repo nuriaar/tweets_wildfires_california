@@ -5,10 +5,12 @@ Dash Test
 import dash
 import dash_html_components as html
 import base64
+from dash.dependencies import Input, Output
 
-from resources.utils import read_tweets_data, filter_coord_data, read_coord_data
-from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
-from ui.map_viz import map_wildfires
+from ..resources.utils import read_tweets_data, filter_coord_data, read_coord_data
+from tweets_analysis_viz import create_wordcloud, create_lda_table
+from map_viz import map_wildfires
+
 
 
 # LOAD DATA WHEN LOADING DASH - NO NEED TO REDO WITH CHANGING INPUTS
@@ -22,7 +24,7 @@ tweets_sample_data = read_tweets_data(tweets_data_filepath + tweets_sample_filen
 coord_data = read_coord_data()
 
 
-# FILTER DATA ACCORDING TO USER INPUTS 
+# FILTER DATA ACCORDING TO USER INPUTS
 # !!! get inputs for year, fire_season, state_info
 
 if state_info:
@@ -38,7 +40,7 @@ lda_table = create_lda_table(filtered_tweets)
 map = map_wildfires(filtered_coord_data)
 
 
-# DASH 
+# DASH
 
 # To show wordcloud –––––––––––––––––
 
