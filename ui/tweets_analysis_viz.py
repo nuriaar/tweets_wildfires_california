@@ -1,18 +1,11 @@
 '''
-Tweets Text Analytics Visualizations
+Tweets text analytics visualizations
 '''
 
 from wordcloud import WordCloud
 import plotly.graph_objects as go
 
 from models.lda import retrieve_topics
-<<<<<<< HEAD
-=======
-
-path = "data/twitter_data/sample_clean_data.csv"
-
-path = "data/twitter_data/tweets_state.csv"
->>>>>>> db984a279269b2f423d178c1d582d01ea59ec60c
 
 
 def create_wordcloud(tweets):
@@ -57,6 +50,3 @@ def create_lda_table(tweets):
                      ])
 
     return fig
-
-
-
