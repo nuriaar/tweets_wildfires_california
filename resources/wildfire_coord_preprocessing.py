@@ -6,6 +6,8 @@ import pandas as pd
 import geopandas as gpd
 from datetime import datetime
 
+from resources.utils import is_fire_season
+
 
 # Minimum level of acres to be considered a large fire
 LARGE_FIRE_ACRES = 1000
@@ -13,20 +15,6 @@ LARGE_FIRE_ACRES = 1000
 # Filenames
 JSON_FILEPATH = "data/California_Wildland_Fire_Perimeters_(All).geojson"
 NEW_JSON_FILEPATH = "data/clean_wildfires_data.geojson"
-
-
-def is_fire_season(row):
-    '''
-    Return True if wildfire data row is within fire season, False otherwise.
-
-    Inputs:
-        row (Pandas Dataframe)
-    '''
-
-    if row["cont_date"].month >= 5 and row["alarm_date"].month < 11:
-        return True
-    else:
-        return False
 
 
 def preprocess_wildfire_coord_data():
@@ -52,9 +40,11 @@ def preprocess_wildfire_coord_data():
     coord_data = coord_data.dropna(subset = ['year', 'alarm_date', 'cont_date',
         'gis_acres', 'geometry'], how = 'any')
 
-    coord_data["alarm_date"] = pd.to_datetime(coord_data["alarm_date"], errors = 'coerce').dt.strftime("%Y-%m-%d")
+    coord_data["alarm_date"] = pd.to_datetime(coord_data["alarm_date"], 
+        errors = 'coerce').dt.strftime("%Y-%m-%d")
     coord_data["alarm_date"] = coord_data["alarm_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
-    coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"], errors = 'coerce').dt.strftime("%Y-%m-%d")
+    coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"],
+        errors = 'coerce').dt.strftime("%Y-%m-%d")
     coord_data["cont_date"] = coord_data["cont_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
 
     coord_data['fire_season'] = coord_data.apply(is_fire_season, axis = 1)
