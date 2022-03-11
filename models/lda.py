@@ -4,7 +4,7 @@ import gensim
 
 def retrieve_topics(tweets):
     '''
-    Retrieve main 3 topics from tweets (7 words per topic) and visualize a table
+    Retrieve main 3 topics from tweets (7 words per topic)
 
     Inputs:
         tweets: list of tweets
