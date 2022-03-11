@@ -1,5 +1,5 @@
 import tweepy
-import api_access
+from resources.api_access import BEARER_TOKEN
 import time
 import geopy
 from geopy.geocoders import Nominatim
@@ -18,7 +18,7 @@ def extract_calfire_tweets(start_date, end_date):
     Returns:
         list of responses from twitter (each response contains 500 tweets)
     '''
-    client = tweepy.Client(bearer_token = api_access.bearer_token)
+    client = tweepy.Client(bearer_token = BEARER_TOKEN)
 
     tweets = []
 
@@ -54,7 +54,7 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
 
     results = []
 
-    path = "/home/sergiou/capp30122/proj-larry_on_fire/proj-larry_on_fire/data/" + output_name
+    path = "data/twitter_data/" + output_name
 
     # map places_ids to coordinates for all tweets
     for response in list_of_tweet_responses:

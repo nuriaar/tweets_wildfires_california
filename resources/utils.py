@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 
 
-def filter_coord_data(coord_data, year, fire_season):
+def filter_coord_data(coord_data, year, fire_season = False):
     '''
     Filter wildfire coordinates dataframe according to parameters.
 
@@ -59,7 +59,7 @@ def read_tweets_data(path):
     return tweets
 
 
-def filter_tweets_data(tweets, year, state_info = True, fire_season = True):
+def filter_tweets_data(tweets, year, state_info = False, fire_season = False):
     '''
     Filter tweets dataframe according to parameters.
 
