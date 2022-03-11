@@ -35,6 +35,15 @@ def create_wordcloud(tweets):
 
 
 def create_lda_table(tweets):
+    '''
+    Retrieve main 3 topics from tweets (7 words per topic) and visualize a table.
+
+    Inputs:
+        tweets: list of tweets
+
+    Outputs:
+        list of lists, with list of 7 words per topic
+    '''
     
     topics_words = retrieve_topics(tweets)
 
