@@ -7,6 +7,10 @@ import plotly.graph_objects as go
 
 from models.lda import retrieve_topics
 
+path = "data/twitter_data/sample_clean_data.csv"
+
+path = "data/twitter_data/tweets_state.csv"
+
 
 def create_wordcloud(tweets):
     '''
@@ -27,19 +31,18 @@ def create_wordcloud(tweets):
 
     wordcloud = wordcloud.generate(str(words))
 
-    create_wordcloud(tweets["Text"].tolist()).to_file('tweets_wordcloud.png')
+    wordcloud.to_file('tweets_wordcloud.png')
 
 
 def create_lda_table(tweets):
     '''
-    For a Pandas Dataframe with tweets, retrieve topics and create plotly table
-    with main topics and words associated to those topics
+    Retrieve main 3 topics from tweets (7 words per topic) and visualize a table.
 
-    Input:
-        Pandas Dataframe
+    Inputs:
+        tweets: list of tweets
 
-    Returns:
-        Plotly figure
+    Outputs:
+        list of lists, with list of 7 words per topic
     '''
 
     topics_words = retrieve_topics(tweets)
@@ -51,4 +54,6 @@ def create_lda_table(tweets):
                      ])
 
     return fig
+
+
 

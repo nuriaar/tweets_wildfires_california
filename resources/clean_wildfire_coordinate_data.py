@@ -2,25 +2,87 @@
 Preprocess wildfire coordinate data for map visualization
 '''
 
-import json
 import pandas as pd
+import geopandas as gpd
 from datetime import datetime
 
 
 # Minimum level of acres to be considered a large fire
 LARGE_FIRE_ACRES = 1000
 
-json_filepath = "data/California_Wildland_Fire_Perimeters_(All).geojson"
-YEARS = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+# Filenames
+JSON_FILEPATH = "data/California_Wildland_Fire_Perimeters_(All).geojson"
+CSV_FILEPATH = "data/clean_wildfires_data.csv"
 
-def preprocess_wildfire_coord_data(path):
+
+def is_fire_season(row):
+
+    print(pd.DatetimeIndex(row["cont_date"]))
+
+    if row["cont_date"].dt.month >= 5 and \
+        row["alarm_date"].dt.month < 11:
+        return True
+    else:
+        return False
+
+def clean_dates(row):
+
+    row["alarm_date"] = datetime.strptime(row["alarm_date"], "%Y-%m-%dT%H:%M:%SZ").date()
+    row["cont_date"] = datetime.strptime(row["cont_date"], "%Y-%m-%dT%H:%M:%SZ").date()
+
+
+
+def preprocess_wildfire_coord_data():
     '''
-    Create csv files with wildfire coordinate data from geojson file to input
+    Create csv file with wildfire coordinate data from geojson file to input
     map visualization.
-
-    Input:
-        path (string): json filepath
     '''
+
+    raw_coord_data = gpd.read_file(JSON_FILEPATH)
+
+    cols = ['OBJECTID', 'YEAR_', 'AGENCY', 'FIRE_NAME', 'ALARM_DATE',
+        'CONT_DATE', 'CAUSE','GIS_ACRES', 'Shape__Area', 'Shape__Length',
+        'geometry']
+    coord_data = raw_coord_data[cols]
+
+    coord_data.rename(columns={'OBJECTID': 'object_id', 'YEAR_': 'year',
+        'AGENCY': 'agency', 'FIRE_NAME': 'fire_name', 
+        'ALARM_DATE': 'alarm_date', 'CONT_DATE': 'cont_date', 'CAUSE': 'cause',
+        'GIS_ACRES': 'gis_acres', 'Shape__Area': 'shape_area', 
+        'Shape__Length': 'shape_length'}, inplace = True)
+
+    coord_data = coord_data[coord_data["gis_acres"] > LARGE_FIRE_ACRES]
+    coord_data = coord_data.dropna(subset = ['year', 'alarm_date', 'cont_date',
+        'gis_acres', 'geometry'], how = 'any')
+
+
+    
+
+    '''
+    datetime.strptime(coord_data["alarm_date"], "%Y-%m-%dT%H:%M:%SZ").date()
+
+    raw_coord_data["ALARM_DATE"] = coord_data["alarm_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%dT%H:%M:%S+%Z"))
+
+    coord_data["alarm_date"] = pd.to_datetime(raw_coord_data["ALARM_DATE"]
+        ).dt.strftime("%Y-%m-%d")
+    coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"]
+        ).dt.strftime("%Y-%m-%d")
+    coord_data["year"] = coord_data["year"].astype(int)
+    
+
+    coord_data['fire_season'] = coord_data.apply(is_fire_season, axis = 1)
+    '''
+
+    coord_data.geometry = coord_data.geometry.simplify(0.01)
+
+    coord_data.to_csv(CSV_FILEPATH, index = False)
+
+
+
+
+
+'''
+
 
     with open(path) as f:
         fires_gj = json.load(f)
@@ -107,3 +169,4 @@ def preprocess_wildfire_coord_data(path):
         preprocessed_data_filename = "data/wildfire_coordinate_data/clean_wildfires_data_" + year1 + ".csv"
         wildfires_data.to_csv(preprocessed_data_filename, index=False)
 
+'''

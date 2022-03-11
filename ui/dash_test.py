@@ -7,10 +7,9 @@ import dash_html_components as html
 import base64
 from dash.dependencies import Input, Output
 
-from ..resources.utils import read_tweets_data, filter_coord_data, read_coord_data
-from tweets_analysis_viz import create_wordcloud, create_lda_table
-from map_viz import map_wildfires
-
+from resources.utils import read_tweets_data, filter_coord_data, read_coord_data, filter_tweets_data
+from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
+from ui.map_viz import map_wildfires
 
 
 # LOAD DATA WHEN LOADING DASH - NO NEED TO REDO WITH CHANGING INPUTS
@@ -28,9 +27,9 @@ coord_data = read_coord_data()
 # !!! get inputs for year, fire_season, state_info
 
 if state_info:
-    filtered_tweets = filter_coord_data(tweets_state_data, year, state_info, fire_season)
+    filtered_tweets = filter_tweets_data(tweets_state_data, year, state_info, fire_season)
 else:
-    filtered_tweets = filter_coord_data(tweets_sample_data, year, state_info, fire_season)
+    filtered_tweets = filter_tweets_data(tweets_sample_data, year, state_info, fire_season)
 
 filtered_coord_data = filter_coord_data(coord_data, year, fire_season)
 

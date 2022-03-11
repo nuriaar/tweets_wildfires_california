@@ -1,3 +1,7 @@
+'''
+Utility functions
+'''
+
 import pandas as pd
 from datetime import datetime
 
@@ -19,6 +23,8 @@ def filter_coord_data(coord_data, year, fire_season = False):
     coord_data = coord_data[(coord_data['year'] == year) & 
                             (coord_data['fire_season'] == fire_season)]
 
+    coord_data = coord_data.reset_index()
+
     return coord_data
 
 
@@ -30,15 +36,9 @@ def read_coord_data():
         coord_data (Pandas Dataframe)
     '''
 
-    data_path = "data/wildfire_coordinate_data/"
-    years = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"]
-    cols = ["fire_name", "gis_acres", "year", "alarm_date", "cont_date", "lat", "lon"]
-    coord_data = pd.DataFrame(columns = cols)
+    data_path = "data/clean_wildfires_data.csv"
+    coord_data = pd.read_csv(data_path)
 
-    for year in years:
-        coord_data_year = pd.read_csv(data_path + "clean_wildfires_data_" + year + ".csv")
-        coord_data = pd.concat([coord_data, coord_data_year])
-    
     return coord_data
 
 
