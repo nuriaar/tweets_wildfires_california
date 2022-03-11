@@ -1,11 +1,14 @@
 import dash
-import dash_html_components as html
-import dash_core_components as dcc
+from dash import html
+from dash import dcc
+from dash import Input, Output
 import plotly.express as px
+import base64
 
 from resources.utils import read_tweets_data, filter_coord_data, read_coord_data, filter_tweets_data
 from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
 from ui.map_viz import map_wildfires
+from ui.line_chart_dash import line_chart_proxy
 
 # Loading preprocessed data
 tweets_data_filepath = "data/twitter_data/"
@@ -17,85 +20,139 @@ tweets_sample_data = read_tweets_data(tweets_data_filepath + tweets_sample_filen
 coord_data = read_coord_data()
 
 
-# Creating initial data visualizations
-filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = False, year = 2021, fire_season = True)
-filtered_coord_data = filter_coord_data(coord_data, year = 2021, fire_season = True)
-create_wordcloud(filtered_tweets)
+### CREATING INITIAL DATA VISUALIZATIONS
+
+## Geo map
+filtered_coord_data = filter_coord_data(coord_data, year = 2020, fire_season = True)
+geo_map = map_wildfires(filtered_coord_data, year = 2020, fire_season = True)
+
+## Tweet line chart
+tweet_plot = line_chart_proxy(year=2020, fire_season = True)
+
+
+## Word cloud and LDA
+filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = False, year = 2020, fire_season = True)
+
+# Word cloud
+create_wordcloud(filtered_tweets) # Word Cloud
+image_filepath = ""
+image_filename = 'tweets_wordcloud.png'
+encoded_image = base64.b64encode(open(image_filepath + image_filename, 'rb').read())
+
+# LDA
 lda_table = create_lda_table(filtered_tweets)
-map = map_wildfires(filtered_coord_data)
+
 
 # Initialising the app
 app = dash.Dash(__name__)
 
-# Defining the app
+# Defining the app layout
 app.layout = html.Div(
-        children=[
-                html.H2('Project Larry on Fire - Analyzing social media data for wildfires in California, USA'),
-                html.Div(className='row-1',  # Define the first row element
-                        children=[
-                                html.Table(
-                                        [html.Tr(
-                                                [html.Td(
-                                                        html.P('''Select a year:''')
-                                                ),
-                                                html.Td(
-                                                        dcc.Dropdown(id = 'year', options = [{'label': x, 'value': x} \
-                                                                for x in [2015, 2016, 2017, 2018, 2019, 2020, 2021]], \
-                                                                value = 2021)
-                                                )]
-                                        ),
-                                        html.Tr(
-                                                [html.Td(
-                                                        html.P('''Select a season:''')
-                                                ),
-                                                html.Td(
-                                                        dcc.RadioItems(id = 'fire_season', \
-                                                                options = [{'label': 'Entire Year', 'value': False}, \
-                                                                {'label': 'Fire Season Only', 'value': True}], value = False)
-                                                )]
-                                        ),
-                                        html.Tr(
-                                                [html.Td(
-                                                        html.P('''Select a geography:''')
-                                                ),
-                                                html.Td(
-                                                        dcc.RadioItems(
-                                                                ['In state', 'Outside state', 'All USA'],
-                                                                'All USA', inline=True)
-                                                )]
-                                        )]
-
-                                ),
-                                html.H3('Location and Twitter data analysis'),
-                                html.Table(
-                                        [html.Tr(
-                                                [html.Td(
-                                                        html.Div(className='Maps')
-                                                )]
-                                        ),
-                                        html.Tr(
-                                                [html.Td(
-                                                        html.Div(className='Plot')
-                                                )]
-                                        )]
-
+    children=[
+        html.H2('Project Larry on Fire - Analyzing social media data for wildfires in California, USA'),
+        html.Div(className='Larry_Page',
+            children=[
+                html.Table(
+                    [html.Tr(
+                        [html.Td(
+                            html.P('''Select a year:''')
+                        ),
+                        html.Td(
+                            dcc.Dropdown(id = 'fire_year', options = [{'label': x, 'value': x} \
+                                for x in [2015, 2016, 2017, 2018, 2019, 2020]], \
+                                value = 2020)
+                        )]
+                    ),
+                    html.Tr(
+                            [html.Td(
+                                html.P('''Select a season:''')
+                            ),
+                            html.Td(
+                                dcc.RadioItems(id = 'fire_season', \
+                                    options = [{'label': 'Entire Year', 'value': False}, \
+                                    {'label': 'Fire Season Only', 'value': True}], value = False)
+                            )]
+                    ),
+                    html.Tr(
+                            [html.Td(
+                                html.P('''Select a geography:''')
+                            ),
+                            html.Td(
+                                dcc.RadioItems(id = 'state_info', \
+                                    options = [{'label': 'Within state', 'value': "in"}, \
+                                    {'label': 'Outside state', 'value': "out"},\
+                                    {'label': 'All USA', 'value': False}], value = False, inline=True)
+                            )]
+                    )]
+            ),
+            html.H3('Location and Twitter data analysis'),
+            html.Table(
+                    [html.Tr(
+                            [html.Td(
+                                dcc.Graph(id='geo_map', figure=geo_map
                                 )
-                                ,  # Define the Maps element
-                                  # Define the Plot element
-                        ]
-                ),
-                html.Div(className='row-2',  # Define the second row element
-                        children=[
-                                html.H3('Word cloud and LDA analysis'),
-                                html.Table(
+                            )]
+                    ),
+                    html.Tr(
+                            [html.Td(
+                                dcc.Graph(id='tweet_plot', figure=tweet_plot
+                                )
+                            )]
+                    )]
+            ),
+            html.H3('Word cloud and LDA analysis'),
+            html.Table(
+                    [html.Tr(
+                            [html.Td(
+                                html.Div([html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()))
+                                ])
+                            )]
+                    ),
+                    html.Tr(
+                            [html.Td(
+                                dcc.Graph(id="lda_table", figure=lda_table
+                                )
+                            )]
+                    )]
 
-                                ),
-                                html.Div(className='Word Cloud'),  # Define the Maps element
-                                html.Div(className='LDA')  # Define the Plot element
-                        ]
-                ),
-        ])
+                )
+            ]
+        )
+    ])
+
+## Callbacks to update page dynamically
+
+# Update Geo map
+@app.callback(
+    dash.dependencies.Output('geo_map', 'figure'),
+    [dash.dependencies.Input('fire_year', 'value'),
+    dash.dependencies.Input('fire_season', 'value')])
+def update_geo_map(year, fire_season):
+    filtered_coord_data = filter_coord_data(coord_data, year, fire_season)
+    return map_wildfires(filtered_coord_data, year, fire_season)
+
+# Update Tweet line chart
+@app.callback(
+    dash.dependencies.Output('tweet_plot', 'figure'),
+    [dash.dependencies.Input('fire_year', 'value'),
+    dash.dependencies.Input('fire_season', 'value')])
+def update_tweet_line_chart(year, fire_season):
+    return line_chart_proxy(year, fire_season)
+
+# Update Word cloud
+
+# Update LDA
+@app.callback(
+    dash.dependencies.Output('lda_table', 'figure'),
+    [dash.dependencies.Input('fire_year', 'value'),
+    dash.dependencies.Input('fire_season', 'value'),
+    dash.dependencies.Input('state_info', 'value')])
+def update_lda_chart(year, fire_season, state_info):
+    filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = state_info, \
+        year = year , fire_season = fire_season)
+    return create_lda_table(filtered_tweets)
+
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
