@@ -1,5 +1,5 @@
 '''
-Tweets Text Analytics Visualizations
+Tweets text analytics visualizations
 '''
 
 from wordcloud import WordCloud

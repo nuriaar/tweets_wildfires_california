@@ -95,4 +95,3 @@ def filter_tweets_data(tweets, year, state_info = False, fire_season = False):
     
     return tweets
 
-
