@@ -21,8 +21,10 @@ def filter_coord_data(coord_data, year, fire_season = False):
         coord_data: Pandas dataframe with filtered data
     '''
 
-    coord_data = coord_data[(coord_data['year'] == year) & 
-                            (coord_data['fire_season'] == fire_season)]
+    coord_data = coord_data[coord_data['year'] == year]
+    
+    if fire_season:
+         coord_data = coord_data[coord_data['fire_season'] == True]
 
     coord_data = coord_data.reset_index()
 

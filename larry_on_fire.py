@@ -8,7 +8,7 @@ import base64
 from resources.utils import read_tweets_data, filter_coord_data, read_coord_data, filter_tweets_data
 from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
 from ui.map_viz import map_wildfires
-from ui.line_chart_dash import line_chart_proxy
+from ui.line_chart import line_chart
 
 # Loading preprocessed data
 tweets_data_filepath = "data/twitter_data/"
@@ -27,7 +27,7 @@ filtered_coord_data = filter_coord_data(coord_data, year = 2020, fire_season = T
 geo_map = map_wildfires(filtered_coord_data, year = 2020, fire_season = True)
 
 ## Tweet line chart
-tweet_plot = line_chart_proxy(year=2020, fire_season = True)
+tweet_plot = line_chart(year=2020, fire_season = True)
 
 
 ## Word cloud and LDA
@@ -104,7 +104,7 @@ app.layout = html.Div(
             html.Table(
                     [html.Tr(
                             [html.Td(
-                                html.Div([html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()))
+                                html.Div([html.Img(id="word_cloud", src='data:image/png;base64,{}'.format(encoded_image.decode()))
                                 ])
                             )]
                     ),
@@ -137,9 +137,22 @@ def update_geo_map(year, fire_season):
     [dash.dependencies.Input('fire_year', 'value'),
     dash.dependencies.Input('fire_season', 'value')])
 def update_tweet_line_chart(year, fire_season):
-    return line_chart_proxy(year, fire_season)
+    return line_chart(year, fire_season)
 
 # Update Word cloud
+@app.callback(
+    dash.dependencies.Output('word_cloud', 'src'),
+    [dash.dependencies.Input('fire_year', 'value'),
+    dash.dependencies.Input('fire_season', 'value'),
+    dash.dependencies.Input('state_info', 'value')])
+def update_word_cloud(year, fire_season, state_info):
+    filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = state_info, year = year, fire_season = fire_season)
+    create_wordcloud(filtered_tweets) # Word Cloud
+    image_filepath = ""
+    image_filename = 'tweets_wordcloud.png'
+    encoded_image = base64.b64encode(open(image_filepath + image_filename, 'rb').read())
+    return 'data:image/png;base64,{}'.format(encoded_image.decode())
+
 
 # Update LDA
 @app.callback(
