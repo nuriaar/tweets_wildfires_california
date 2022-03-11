@@ -8,7 +8,7 @@ def retrieve_topics(tweets):
 
     Inputs:
         tweets: list of tweets
-    
+
     Outputs:
         list of lists, with list of 7 words per topic
     '''
