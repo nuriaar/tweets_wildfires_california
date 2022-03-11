@@ -6,7 +6,6 @@ import plotly.express as px
 
 from resources.utils import filter_coord_data
 
-
 def map_wildfires(coord_data, year, fire_season):
     '''
     Create mapbox wildfire visualization. 

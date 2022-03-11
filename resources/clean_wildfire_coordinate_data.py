@@ -3,7 +3,6 @@ Preprocess wildfire coordinate data for map visualization
 '''
 
 import pandas as pd
-import numpy as np
 import geopandas as gpd
 from datetime import datetime
 
@@ -54,7 +53,10 @@ def preprocess_wildfire_coord_data():
 
     coord_data = coord_data[coord_data["gis_acres"] > LARGE_FIRE_ACRES]
     coord_data = coord_data.dropna(subset = ['year', 'alarm_date', 'cont_date',
-        'gis_acres', 'geometry'], how='any')
+        'gis_acres', 'geometry'], how = 'any')
+
+
+    
 
     '''
     datetime.strptime(coord_data["alarm_date"], "%Y-%m-%dT%H:%M:%SZ").date()
