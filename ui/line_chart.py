@@ -1,28 +1,9 @@
 import sys
 sys.path.append('../')
 
-import matplotlib.pyplot as plt
 from resources.line_chart_preprocessing import get_plot_data, filter_plot_data
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-
-
-app = dash.Dash()
-app.layout = html.Div([
-    dcc.Dropdown(id = 'year', options = [{'label': x, 'value': x} for x in [2015, 2016, 2017, 2018, 2019, 2020, 2021]], value = 2021),
-    dcc.RadioItems(id = 'fire_season', options = [{'label': 'Entire Year', 'value': False}, {'label': 'Fire Season Only', 'value': True}], value = False, labelStyle={'display': 'block'}),
-    dcc.Graph(id = 'line_chart')
-])
-
-@app.callback(
-    dash.dependencies.Output('line_chart', 'figure'),
-    [dash.dependencies.Input('year', 'value'),
-    dash.dependencies.Input('fire_season', 'value')])
 
 
 def line_chart_proxy(year, fire_season = True):
@@ -58,8 +39,4 @@ def line_chart(year, plot_data):
         paper_bgcolor = '#787878',
         plot_bgcolor = '#9A9A9A',
         showlegend = False)
-    # fig.show()
     return figure
-
-
-app.run_server(debug = True, use_reloader = False)
