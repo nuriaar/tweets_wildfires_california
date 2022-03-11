@@ -13,6 +13,7 @@ def retrieve_topics(tweets):
         list of lists, with list of 7 words per topic
     '''
 
+    tweets['Text'] = tweets['Text'].astype(str).apply(lambda x: x.split())
     #build corpus
     dictionary = corpora.Dictionary(tweets['Text'])
     texts = tweets['Text']
