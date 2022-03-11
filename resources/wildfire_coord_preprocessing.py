@@ -17,19 +17,11 @@ CSV_FILEPATH = "data/clean_wildfires_data.csv"
 
 def is_fire_season(row):
 
-    print(pd.DatetimeIndex(row["cont_date"]))
-
-    if row["cont_date"].dt.month >= 5 and \
-        row["alarm_date"].dt.month < 11:
+    if row["cont_date"].month >= 5 and \
+        row["alarm_date"].month < 11:
         return True
     else:
         return False
-
-def clean_dates(row):
-
-    row["alarm_date"] = datetime.strptime(row["alarm_date"], "%Y-%m-%dT%H:%M:%SZ").date()
-    row["cont_date"] = datetime.strptime(row["cont_date"], "%Y-%m-%dT%H:%M:%SZ").date()
-
 
 
 def preprocess_wildfire_coord_data():
@@ -55,30 +47,16 @@ def preprocess_wildfire_coord_data():
     coord_data = coord_data.dropna(subset = ['year', 'alarm_date', 'cont_date',
         'gis_acres', 'geometry'], how = 'any')
 
-
-    
-
-    '''
-    datetime.strptime(coord_data["alarm_date"], "%Y-%m-%dT%H:%M:%SZ").date()
-
-    raw_coord_data["ALARM_DATE"] = coord_data["alarm_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%dT%H:%M:%S+%Z"))
-
-    coord_data["alarm_date"] = pd.to_datetime(raw_coord_data["ALARM_DATE"]
-        ).dt.strftime("%Y-%m-%d")
-    coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"]
-        ).dt.strftime("%Y-%m-%d")
-    coord_data["year"] = coord_data["year"].astype(int)
-    
+    coord_data["alarm_date"] = pd.to_datetime(coord_data["alarm_date"]).dt.strftime("%Y-%m-%d")
+    coord_data["alarm_date"] = coord_data["alarm_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
+    coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"]).dt.strftime("%Y-%m-%d")
+    coord_data["cont_date"] = coord_data["cont_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
 
     coord_data['fire_season'] = coord_data.apply(is_fire_season, axis = 1)
-    '''
 
     coord_data.geometry = coord_data.geometry.simplify(0.01)
 
     coord_data.to_csv(CSV_FILEPATH, index = False)
-
-
-
 
 
 '''

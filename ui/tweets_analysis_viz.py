@@ -16,7 +16,7 @@ def create_wordcloud(tweets):
     '''
     Create tweets word cloud visualization and save it in .png file.
 
-    Inputs: 
+    Inputs:
         tweets (Pandas Dataframe): tweet data
     '''
 
@@ -28,7 +28,7 @@ def create_wordcloud(tweets):
         max_font_size = 30,
         scale = 3,
         random_state = 1)
-   
+
     wordcloud = wordcloud.generate(str(words))
 
     wordcloud.to_file('tweets_wordcloud.png')
@@ -44,7 +44,7 @@ def create_lda_table(tweets):
     Outputs:
         list of lists, with list of 7 words per topic
     '''
-    
+
     topics_words = retrieve_topics(tweets)
 
     fig = go.Figure(
