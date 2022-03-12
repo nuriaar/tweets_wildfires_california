@@ -49,17 +49,36 @@ encoded_image = base64.b64encode(open(image_filepath + image_filename,\
 # LDA
 lda_table = create_lda_table(filtered_tweets)
 
+# Logo
+logo_file_path = "assets/logo.jpg"
+logo_image = base64.b64encode(open(logo_file_path,\
+     'rb').read())
 
 # Initialising the app
 app = dash.Dash(__name__)
 
 # Defining the app layout
 app.layout = html.Div(
-    children=[
-        html.H2('Project Larry on Fire - Analyzing social media data \
-            for wildfires in California, USA'),
+    children=[html.Div(
+        html.Table(
+            [html.Tr(
+                [html.Td(
+                    html.Div([html.Img(id="logo", \
+                        src='data:image/png;base64,{}'.format(\
+                        logo_image.decode()), style={\
+                            'height':'125px', 'width':'125px'})
+                    ], style={'textAlign': 'left'})
+                ),
+                html.Td(
+                    children=[
+                        html.H2("Project - 'Larry on Fire'"),
+                        html.H3('Analyzing wildfire coverage and Twitter data \
+                            in the state of California, USA')], style={'textAlign': 'left'}
+                )], style={'border': '0px'}
+            )]
+        ), style={"overflow": "scroll", "height": "150px", "width":"1200px", "border": "1px solid"}),
         html.Div(className='Larry_Page',
-            children=[
+            children=[html.Div(
                 html.Table(
                     [html.Tr(
                         [html.Td(
@@ -98,41 +117,54 @@ app.layout = html.Div(
                                         value = False, inline=True)
                             )]
                     )]
-            ),
-            html.H3('Location and Twitter data analysis'),
-            html.Table(
+                ), style={"overflow": "scroll", "height": "225px", "width":"1200px", "border": "1px solid"}),
+            html.Div(html.Table(
                     [html.Tr(
-                            [html.Td(
-                                dcc.Graph(id='geo_map', figure=geo_map
-                                )
-                            )]
+                        [html.Td(
+                            html.Div([html.H3('Location map')
+                            ])
+                        ),
+                        html.Td(
+                            html.Div([html.H3('Tweet frequency analysis')
+                            ])
+                        )]
                     ),
                     html.Tr(
-                            [html.Td(
-                                dcc.Graph(id='tweet_plot', figure=tweet_plot
+                        [html.Td(
+                            html.Div([dcc.Graph(id='geo_map', figure=geo_map
                                 )
-                            )]
-                    )]
-            ),
-            html.H3('Word cloud and LDA analysis'),
-            html.Table(
-                    [html.Tr(
-                            [html.Td(
-                                html.Div([html.Img(id="word_cloud", \
-                                    src='data:image/png;base64,{}'.format(\
-                                        encoded_image.decode()))
-                                ])
-                            )]
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                        ),
+                        html.Td(
+                            html.Div([dcc.Graph(id='tweet_plot', figure=tweet_plot
+                                )
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                        )]
                     ),
                     html.Tr(
-                            [html.Td(
-                                dcc.Graph(id="lda_table", figure=lda_table
+                        [html.Td(
+                            html.Div([html.H3('Tweet word cloud')
+                            ])
+                        ),
+                        html.Td(
+                            html.Div([html.H3('Tweet LDA analysis')
+                            ])
+                        )]
+                    ),
+                    html.Tr(
+                        [html.Td(
+                            html.Div([html.Img(id="word_cloud", \
+                                src='data:image/png;base64,{}'.format(\
+                                    encoded_image.decode()))
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                        ),
+                        html.Td(
+                            html.Div([dcc.Graph(id="lda_table", figure=lda_table
                                 )
-                            )]
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                        )]
                     )]
-
-                )
-            ]
+            ), style={"overflow": "scroll", "height": "1000px", "width":"1200px", "border": "1px solid"})]
         )
     ])
 

@@ -2,6 +2,7 @@
 Tweets text analytics visualizations
 '''
 
+from enum import auto
 from wordcloud import WordCloud
 import plotly.graph_objects as go
 
@@ -46,8 +47,14 @@ def create_lda_table(tweets):
 
     fig = go.Figure(
         data = [go.Table(
-            header = {"values": ['Topic 1', 'Topic 2', 'Topic 3']},
-            cells =  {"values": topics_words})
+            header = dict(values=['Topic 1', 'Topic 2', 'Topic 3'],
+                font_color='white',
+                fill_color='blue',
+                align='left'),
+            cells = dict(values = topics_words,
+               line_color='black',
+               fill_color='white',
+               align='left'))
                      ])
-
+    fig.update_layout(autosize=True)
     return fig
