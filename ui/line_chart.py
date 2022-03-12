@@ -15,7 +15,7 @@ def line_chart(year, fire_season = True):
         fire_season (bool): indicating whether only the fire season
             is relevant
 
-    Ouptput:
+    Output:
         line chart (fig): the plot
     '''
     plot_data = filter_plot_data(year, fire_season, get_plot_data())
