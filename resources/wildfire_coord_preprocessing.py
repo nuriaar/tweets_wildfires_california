@@ -1,5 +1,5 @@
 '''
-Preprocess wildfire coordinate data for map visualization.
+Preprocess wildfire coordinate data for map visualization
 '''
 
 import pandas as pd
@@ -42,10 +42,13 @@ def preprocess_wildfire_coord_data():
 
     coord_data["alarm_date"] = pd.to_datetime(coord_data["alarm_date"], 
         errors = 'coerce').dt.strftime("%Y-%m-%d")
-    coord_data["alarm_date"] = coord_data["alarm_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
+    coord_data["alarm_date"] = coord_data["alarm_date"].apply( \
+        lambda x: datetime.strptime(x, "%Y-%m-%d"))
+
     coord_data["cont_date"] = pd.to_datetime(coord_data["cont_date"],
         errors = 'coerce').dt.strftime("%Y-%m-%d")
-    coord_data["cont_date"] = coord_data["cont_date"].apply(lambda x: datetime.strptime(x, "%Y-%m-%d"))
+    coord_data["cont_date"] = coord_data["cont_date"].apply( \
+        lambda x: datetime.strptime(x, "%Y-%m-%d"))
 
     coord_data['fire_season'] = coord_data.apply(is_fire_season, axis = 1)
 

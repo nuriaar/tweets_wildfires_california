@@ -27,12 +27,13 @@ def create_wordcloud(tweets):
 
     wordcloud = wordcloud.generate(str(words))
 
-    wordcloud.to_file('tweets_wordcloud.png')
+    wordcloud.to_file('ui/tweets_wordcloud.png')
 
 
 def create_lda_table(tweets):
     '''
-    Retrieve main 3 topics from tweets (7 words per topic) and visualize a table.
+    Retrieve main 3 topics from tweets (7 words per topic) and visualize a
+    table.
 
     Inputs:
         tweets: list of tweets
