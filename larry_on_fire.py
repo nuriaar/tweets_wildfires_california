@@ -70,7 +70,7 @@ app.layout = html.Div(
                             html.Td(
                                 dcc.RadioItems(id = 'fire_season', \
                                     options = [{'label': 'Entire Year', 'value': False}, \
-                                    {'label': 'Fire Season Only', 'value': True}], value = False)
+                                    {'label': 'Fire Season Only', 'value': True}], value = True)
                             )]
                     ),
                     html.Tr(
@@ -148,7 +148,7 @@ def update_tweet_line_chart(year, fire_season):
 def update_word_cloud(year, fire_season, state_info):
     filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = state_info, year = year, fire_season = fire_season)
     create_wordcloud(filtered_tweets) # Word Cloud
-    image_filepath = ""
+    image_filepath = "ui/"
     image_filename = 'tweets_wordcloud.png'
     encoded_image = base64.b64encode(open(image_filepath + image_filename, 'rb').read())
     return 'data:image/png;base64,{}'.format(encoded_image.decode())
