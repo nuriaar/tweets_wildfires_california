@@ -1,9 +1,14 @@
+'''
+Module creating the line chart visualization that display the number of
+acres burned and number of tweets for the weeks of a given year.
+'''
+
 import sys
 sys.path.append('../')
 
 from resources.line_chart_preprocessing import get_plot_data, filter_plot_data
-import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 
 def line_chart(year, fire_season = True):
@@ -43,4 +48,5 @@ def line_chart(year, fire_season = True):
         fixedrange = True)
     figure.update_layout(paper_bgcolor = '#fff', plot_bgcolor = '#f5f7ff', \
         showlegend = False)
+
     return figure

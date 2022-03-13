@@ -19,7 +19,7 @@ def filter_plot_data(year, fire_season, data):
         fire_season (bool): indicating whether only the fire season
             is relevant
         data (pd.DataFrame): the preprocessed data
-    
+
     Output:
         data (pd.DataFrame): the relevant plot data
     '''
@@ -42,26 +42,26 @@ def get_plot_data():
 
     Input:
         None
-    
+
     Ouptput:
-        data (pd.DataFrame): the data  
+        data (pd.DataFrame): the data
     '''
-    long_filenames = glob.glob('data/*'.format('csv'))
-    filenames = [filename[-13:] for filename in long_filenames]
+    filenames = glob.glob('data/*'.format('csv'))
+    filenames = [filename[-len('plot_data.csv'):] for filename in filenames]
     if 'plot_data.csv' not in filenames:
         generate_plot_data()
-    data = pd.read_csv(f'data/plot_data.csv', index_col = ['year', 'week'])
+    data = pd.read_csv('data/plot_data.csv', index_col = ['year', 'week'])
     return data
 
 
 def generate_plot_data():
     '''
-    Generates the data required for the line chart (number of tweets and number
-    of acres burned for each week of each year) and saves it.
+    Generates the data required for the line chart (number of tweets and
+    number of acres burned for each week of each year) and saves it.
 
     Input:
         None
-    
+
     Output:
         None
     '''
@@ -85,7 +85,7 @@ def get_wildfire_data():
 
     Input:
         None
-    
+
     Output:
         wildfire_data (pd.DataFrame): the relevant wildfire data
     '''
@@ -115,11 +115,11 @@ def get_twitter_data():
 
     Input:
         None
-    
+
     Output:
         twitter_data (pd.DataFrame): the relevant twitter data
     '''
-    twitter_filenames = glob.glob(f'data/twitter_data/*'.format('csv'))
+    twitter_filenames = glob.glob('data/twitter_data/*'.format('csv'))
     twitter_data = pd.concat([pd.read_csv(file, usecols = ['Date']) \
         for file in twitter_filenames])
     twitter_data.rename(columns = {'Date': 'date'}, inplace = True)
