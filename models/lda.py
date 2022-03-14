@@ -1,6 +1,5 @@
-import pandas as pd
-import gensim.corpora as corpora
-import gensim
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 
 def retrieve_topics(tweets):
     '''
@@ -13,20 +12,18 @@ def retrieve_topics(tweets):
         list of lists, with list of 7 words per topic
     '''
 
-    tweets['Text'] = tweets['Text'].astype(str).apply(lambda x: x.split())
-    #build corpus
-    dictionary = corpora.Dictionary(tweets['Text'])
-    texts = tweets['Text']
-    corpus = [dictionary.doc2bow(text) for text in texts]
-
-    #run LDA model
-    num_topics = 3
-    lda_model = gensim.models.LdaMulticore(corpus=corpus,
-                                            id2word=dictionary,
-                                            num_topics=num_topics)
-
-    #extract topics
-    topics = lda_model.show_topics(3, 7, formatted = False)
-    topics_words = [([word[0] for word in topic[1]]) for topic in topics]
-
-    return topics_words
+    vect = TfidfVectorizer(max_features = 1000)
+    vect_text = vect.fit_transform(tweets['Text'].astype(str))
+    idf = vect.idf_
+    lda_model = LatentDirichletAllocation(n_components = 3, max_iter = 1)
+    lda_top = lda_model.fit_transform(vect_text)
+    features = vect.get_feature_names_out()
+    words_topics = []
+    for i, comp in enumerate(lda_model.components_):
+        vocab_comp = zip(features, comp)
+        sorted_words = sorted(vocab_comp, key = lambda x:x[1], reverse = True)[:7]
+        tmp_ls = []
+        for word, _ in sorted_words:
+            tmp_ls.append(word)
+        words_topics.append(tmp_ls)
+    return words_topics

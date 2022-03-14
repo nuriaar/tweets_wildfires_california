@@ -40,7 +40,7 @@ filtered_tweets = filter_tweets_data(tweets_sample_data, state_info = False, \
     year = 2020, fire_season = True)
 
 # Word cloud
-create_wordcloud(filtered_tweets) # Word Cloud
+create_wordcloud(filtered_tweets)
 image_filepath = "ui/"
 image_filename = 'tweets_wordcloud.png'
 encoded_image = base64.b64encode(open(image_filepath + image_filename,\
