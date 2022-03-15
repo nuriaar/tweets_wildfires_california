@@ -1,8 +1,7 @@
 '''
-Tweets text analytics visualizations
+Visualizations for Tweets text analytics
 '''
 
-from enum import auto
 from wordcloud import WordCloud
 import plotly.graph_objects as go
 
@@ -56,5 +55,7 @@ def create_lda_table(tweets):
                fill_color='white',
                align='left'))
                      ])
-    fig.update_layout(autosize=True)
+
+    fig.update_layout(autosize = True)
+
     return fig

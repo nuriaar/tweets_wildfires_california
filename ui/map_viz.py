@@ -1,5 +1,5 @@
 '''
-Map visualization of wildfires
+Map visualization of wildfires in California. 
 '''
 
 import plotly.express as px
