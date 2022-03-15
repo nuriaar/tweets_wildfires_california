@@ -1,8 +1,10 @@
+'''
+Dash interface
+'''
+
 import dash
 from dash import html
 from dash import dcc
-from dash import Input, Output
-import plotly.express as px
 import base64
 
 from resources.utils import read_tweets_data, filter_coord_data,\
@@ -10,6 +12,7 @@ from resources.utils import read_tweets_data, filter_coord_data,\
 from ui.tweets_analysis_viz import create_wordcloud, create_lda_table
 from ui.map_viz import map_wildfires
 from ui.line_chart import line_chart
+
 
 # Loading preprocessed data
 tweets_data_filepath = "data/twitter_data/"
@@ -44,7 +47,7 @@ create_wordcloud(filtered_tweets)
 image_filepath = "ui/"
 image_filename = 'tweets_wordcloud.png'
 encoded_image = base64.b64encode(open(image_filepath + image_filename,\
-     'rb').read())
+    'rb').read())
 
 # LDA
 lda_table = create_lda_table(filtered_tweets)
@@ -52,7 +55,7 @@ lda_table = create_lda_table(filtered_tweets)
 # Logo
 logo_file_path = "assets/logo.jpg"
 logo_image = base64.b64encode(open(logo_file_path,\
-     'rb').read())
+    'rb').read())
 
 # Initialising the app
 app = dash.Dash(__name__)
@@ -64,8 +67,8 @@ app.layout = html.Div(
             [html.Tr(
                 [html.Td(
                     html.Div([html.Img(id="logo", \
-                        src='data:image/png;base64,{}'.format(\
-                        logo_image.decode()), style={\
+                        src='data:image/png;base64,{}'.format( \
+                        logo_image.decode()), style={ \
                             'height':'125px', 'width':'125px'})
                     ], style={'textAlign': 'left'})
                 ),
