@@ -1,11 +1,11 @@
 '''
-Dash interface
+Main code for Dash interface
 '''
 
 import dash
+import base64
 from dash import html
 from dash import dcc
-import base64
 
 from resources.utils import read_tweets_data, filter_coord_data,\
      read_coord_data, filter_tweets_data
@@ -79,7 +79,8 @@ app.layout = html.Div(
                             in the state of California, USA')], style={'textAlign': 'left'}
                 )], style={'border': '0px'}
             )]
-        ), style={"overflow": "scroll", "height": "150px", "width":"1200px", "border": "1px solid"}),
+        ), style={"overflow": "scroll", "height": "150px", "width":"1200px", \
+                "border": "1px solid"}),
         html.Div(className='Larry_Page',
             children=[html.Div(
                 html.Table(
@@ -120,7 +121,8 @@ app.layout = html.Div(
                                         value = False, inline=True)
                             )]
                     )]
-                ), style={"overflow": "scroll", "height": "225px", "width":"1200px", "border": "1px solid"}),
+                ), style={"overflow": "scroll", "height": "225px", "width":"1200px", \
+                        "border": "1px solid"}),
             html.Div(html.Table(
                     [html.Tr(
                         [html.Td(
@@ -136,12 +138,14 @@ app.layout = html.Div(
                         [html.Td(
                             html.Div([dcc.Graph(id='geo_map', figure=geo_map
                                 )
-                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", \
+                                    "border": "1px solid"})
                         ),
                         html.Td(
                             html.Div([dcc.Graph(id='tweet_plot', figure=tweet_plot
                                 )
-                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", \
+                                    "border": "1px solid"})
                         )]
                     ),
                     html.Tr(
@@ -159,17 +163,21 @@ app.layout = html.Div(
                             html.Div([html.Img(id="word_cloud", \
                                 src='data:image/png;base64,{}'.format(\
                                     encoded_image.decode()))
-                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", \
+                                "border": "1px solid"})
                         ),
                         html.Td(
                             html.Div([dcc.Graph(id="lda_table", figure=lda_table
                                 )
-                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", "border": "1px solid"})
+                            ], style={"overflow": "scroll", "height": "400px", "width":"575px", \
+                                    "border": "1px solid"})
                         )]
                     )]
-            ), style={"overflow": "scroll", "height": "1000px", "width":"1200px", "border": "1px solid"})]
+            ), style={"overflow": "scroll", "height": "1000px", "width":"1200px", \
+                    "border": "1px solid"})]
         )
     ])
+
 
 ## Callbacks to update page dynamically
 
