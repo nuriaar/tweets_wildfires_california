@@ -8,7 +8,7 @@
 
 ### Interacting with the Application
 
-Once the three steps above are exectued, one can interact with the application on the web browser by toggling three things:
+Once the three steps above are executed, one can interact with the application on the web browser by toggling three things:
 
 * Year (dropdown menu)
 * Season (button)
