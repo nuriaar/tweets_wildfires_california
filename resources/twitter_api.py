@@ -1,9 +1,13 @@
+'''
+Functions to interact with Twitter API.
+'''
+
 import tweepy
-from resources.api_access import BEARER_TOKEN
-import time
-import geopy
-from geopy.geocoders import Nominatim
 import csv
+import time
+from resources.api_access import BEARER_TOKEN
+from geopy.geocoders import Nominatim
+
 
 def extract_calfire_tweets(start_date, end_date):
     '''
@@ -36,10 +40,11 @@ def extract_calfire_tweets(start_date, end_date):
     
     return tweets
 
+
 def extract_tweets_info(list_of_tweet_responses, output_name):
     '''
     For a list of responses from twitter, extract important information 
-    (id, date, text, and state) and write a csv file with the output name
+    (id, date, text, and state) and write a csv file with the output name.
 
     Inputs:
         list_of_tweet_responses: list of responses from twitter 
@@ -50,25 +55,24 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
         Writes csv file with name output_name
 
     '''
-    location_coord = {}
 
-    results = []
+    location_coord = {}
 
     path = "data/twitter_data/" + output_name
 
-    # map places_ids to coordinates for all tweets
+    # Map places_ids to coordinates for all tweets
     for response in list_of_tweet_responses:
         if 'places' in response.includes.keys():
             for place in response.includes['places']:
                 coordinates = place.geo['bbox']
-                lat = str((coordinates[1] + coordinates[3])/ 2)
-                lon = str((coordinates[0] + coordinates[2])/ 2)
-                location_coord[place.id] = lat+","+lon
+                lat = str((coordinates[1] + coordinates[3]) / 2)
+                lon = str((coordinates[0] + coordinates[2]) / 2)
+                location_coord[place.id] = lat + "," + lon
 
-    # extract state information from coordinates
+    # Extract state information from coordinates
     location_state = map_coordinates(location_coord)
 
-    # read list of tweet responses and extract relevant information
+    # Read list of tweet responses and extract relevant information
     with open(path, "w") as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=",")
         spamwriter.writerow(['Id', 'Date', 'Text', 'State'])
@@ -84,21 +88,22 @@ def extract_tweets_info(list_of_tweet_responses, output_name):
                 text = tweet.text
                 state = location_state.get(place_id, None)
                 spamwriter.writerow([tweet_id, date, text, state])
-    
+
 
 def map_coordinates(location_coord):
     '''
-    Extract state information from coordinates (we need the coord_state intermediary
-    dictionary to avoid the issue of retrieving state information for the same
-    coordinates twice - which leads to an error)
+    Extract state information from coordinates (we need the coord_state
+    intermediary dictionary to avoid the issue of retrieving state
+    information for the same coordinates twice - which leads to an error).
 
     Inputs: 
-        location_coord: dictionary that maps places_ids to coordinates
+        location_coord (Dict): maps places_ids to coordinates
 
     Returns:
-        dictionary that maps places ids to states
+        Dictionary that maps places ids to states
     '''
-    geolocator = Nominatim(user_agent="geoapiExercises")
+
+    geolocator = Nominatim(user_agent = "geoapiExercises")
 
     location_state = {}
     coord_state = {}
@@ -114,5 +119,5 @@ def map_coordinates(location_coord):
                 location_state[key] = state
         else:
             location_state[key] = coord_state[location_str]
-    
+
     return location_state

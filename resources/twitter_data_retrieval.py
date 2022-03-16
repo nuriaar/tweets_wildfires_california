@@ -1,4 +1,9 @@
+'''
+Retrieval of Twitter data from the API.
+'''
+
 from resources.twitter_api import extract_calfire_tweets, extract_tweets_info
+
 
 def retrieve_all_tweets(starting_year, n_years):
     '''
@@ -13,11 +18,11 @@ def retrieve_all_tweets(starting_year, n_years):
         Writes CSV files in data/twitter_data/
     '''
 
-    #Create list to make different queries of six-month periods
+    # Create list to make different queries of six-month periods
     start_day = "01"
-    end_dates = ["30", "31"]*(n_years*2)
-    start_month_name = ["Jan", "July"]*(n_years*2)
-    start_month = ["01", "07"]*(n_years*2)
+    end_dates = ["30", "31"] * (n_years * 2)
+    start_month_name = ["Jan", "July"] * (n_years * 2)
+    start_month = ["01", "07"] * (n_years * 2)
 
     years = []
     for i in range(n_years):
@@ -25,17 +30,18 @@ def retrieve_all_tweets(starting_year, n_years):
         years.append(str(year))
         years.append(str(year))
 
-    end_month_name = ["June", "Dec"]*(n_years*2)
-    end_month = ["06", "12"]*(n_years*2)
+    end_month_name = ["June", "Dec"] * (n_years * 2)
+    end_month = ["06", "12"] * (n_years * 2)
 
-    #Extract tweets for each period and write csv file
+    # Extract tweets for each period and write csv file
     for i in range(i, len(years)):
+
         print(i, "out of", len(years))
 
         start_date = years[i] + "-" + start_month[i] + "-" + start_day + "T00:00:00Z"
         end_date = years[i] + "-" + end_month[i]  + "-" + end_dates[i] + "T00:00:00Z"
         output_name = years[i] + "_" + start_month_name[i] + "_" + end_month_name[i] + ".csv"
-        
+
         responses_list = extract_calfire_tweets(start_date, end_date)
         extract_tweets_info(responses_list, output_name)
         print("completed")
@@ -47,8 +53,8 @@ def api_simulation(start_date, end_date):
     function to avoid retrieving too many tweets.
 
     Inputs:
-        Start date: (str) YYYY-MM-DD
-        End date: (str) YYYY-MM-DD
+        Start date (str): YYYY-MM-DD
+        End date (str): YYYY-MM-DD
     
     Outputs: 
         CSV file in data/twitter_data/
