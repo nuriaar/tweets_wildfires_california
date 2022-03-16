@@ -173,9 +173,12 @@ app.layout = html.Div(
                                     "border": "1px solid"})
                         )]
                     )]
-            ), style={"overflow": "scroll", "height": "1000px", "width":"1200px", \
+            ), style={"overflow": "scroll", "height": "1100px", "width":"1200px", \
                     "border": "1px solid"})]
-        )
+        ),
+        html.Div([html.P('''<<Analysis here>>''')
+                            ], style={"overflow": "scroll", "height": "400px", "width":"1200px", \
+                                "border": "1px solid"})
     ])
 
 
