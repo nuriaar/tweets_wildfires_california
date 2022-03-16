@@ -1,5 +1,5 @@
 '''
-Utility functions
+Utility functions.
 '''
 
 import pandas as pd
@@ -26,13 +26,13 @@ def filter_coord_data(coord_data, year, fire_season = False):
     Filter wildfire coordinates dataframe according to parameters.
 
     Inputs:
-        coord_data: Pandas dataframe with coordinates
-        year: (int) year to filter
-        fire_season: (boolean) Include tweets only from Fire Season if true.
+        coord_data (Pandas dataframe)
+        year (int): year to filter
+        fire_season (boolean): Include tweets only from Fire Season if True.
             Fire season goes from May to October included.
     
     Outputs:
-        coord_data: Pandas dataframe with filtered data
+        coord_data (Pandas Dataframe): filtered data
     '''
 
     coord_data = coord_data[coord_data['year'] == year]
@@ -63,7 +63,7 @@ def read_coord_data():
 
 def read_tweets_data(path):
     '''
-    Read twitter data from path.
+    Read Twitter data from path.
 
     Input:
         path (str)
@@ -83,17 +83,16 @@ def filter_tweets_data(tweets, year, state_info = False, fire_season = False):
     Filter tweets dataframe according to parameters.
 
     Inputs:
-        tweets: Pandas dataframe with tweets
-        year: (int) year to filter
-        state_info: (str) "in" for California tweets, "out" for out of state
-            tweets.
-            If it's false, it retrieves all tweets (including those without
-            location info)
-        fire_season: (boolean) Include tweets only from Fire Season if true.
+        tweets (Pandas Dataframe)
+        year (int): year to filter
+        state_info (str): "in" for California tweets, "out" for out of state
+            tweets. If it's False, it retrieves all tweets (including those
+            without location info)
+        fire_season (boolean): Include tweets only from Fire Season if True.
             Fire season goes from May to October included.
 
     Outputs:
-        tweets: Pandas dataframe with filtered data
+        tweets (Pandas Dataframe): filtered tweets data
     '''
 
     mask = (tweets['Date'].dt.year == year)
