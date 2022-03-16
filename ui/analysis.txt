@@ -1,0 +1,6 @@
+
+Analysis and observations:
+
+The data shows expected trends for tweet saliency: most tweets are posted when the fires first occur. This interest then decays during the off-season, with fewer tweets and no significantly relevant social interest in wildfires until the fire season starts again. Within the fire season, the trend differs significantly from year to year - we would expect factors other than total acres burned to impact the volume of tweets, including political movements, the specific location of wildfires, etc.
+
+Regarding the Twitter conversation, in-state tweets tend to talk more about the immediate response, frequently mentioning safety, evacuations, smoke and firefighters. Out-of-state tweets have a greater focus on more general climate change issues and political matters. As expected, during the fire season, we also see more references to safety concerns and specific events. Overall, we did not find mutually exclusive topics that drove the social conversation from the Latent Dirichlet Allocation analysis. This indicates the tweets tend to mention a range of issues and are not easily classifiable into distinct topics.

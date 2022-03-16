@@ -57,6 +57,11 @@ logo_file_path = "assets/logo.jpg"
 logo_image = base64.b64encode(open(logo_file_path,\
     'rb').read())
 
+# Analysis
+analysis_filepath = "ui/analysis.txt"
+with open(analysis_filepath) as f:
+    analysis_text = f.readlines()
+
 # Initialising the app
 app = dash.Dash(__name__)
 
@@ -173,32 +178,12 @@ app.layout = html.Div(
                                     "border": "1px solid"})
                         )]
                     )]
-            ), style={"overflow": "scroll", "height": "1100px", "width":"1200px", \
+            ), style={"overflow": "scroll", "height": "1050px", "width":"1200px", \
                     "border": "1px solid"})]
         ),
-        html.Div([html.P(
-            '''
-            The data shows expected trends for tweet saliency: most tweets are
-            posted when fires occur. This interest then decays off-season, with
-            fewer tweets and no significantly relevant social interest in
-            wildfires until fire season starts again. Within the fire season,
-            the trend differs significantly from year to year - we would expect
-            factors other than total acres burned to impact the volume of
-            tweets, including political movements, specific location of
-            wildfires, etc.
-
-            Regarding the Twitter conversation, in-state tweets tend to talk
-            more about the immediate response, frequently mentioning safety,
-            evacuations, smoke and firefighters. Out-of-state tweets have a
-            greater focus on more general climate change issues and political
-            matters. As expected, during fire season, we also see more
-            references to safety concerns and specific events. Overall, we did
-            not find specific and mutually exclusive topics that drove the
-            social conversation from the latent Dirichlet allocation analysis.
-            This indicates the tweets tend to mention a range of issues and are
-            not easily classifiable into distinct topics.
-            ''')
-                            ], style={"overflow": "scroll", "height": "400px", "width":"1200px", \
+        html.Div(dcc.Textarea(value = analysis_text, style={\
+            "height": "300px", "width":"1200px"}), \
+            style={"overflow": "scroll", "height": "300px", "width":"1200px", \
                                 "border": "1px solid"})
     ])
 
