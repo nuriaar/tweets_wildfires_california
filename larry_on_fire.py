@@ -182,7 +182,7 @@ app.layout = html.Div(
             ), style={"overflow": "scroll", "height": "1050px", "width":"1200px", \
                     "border": "1px solid"})]
         ),
-        html.Div(dcc.Textarea(value = analysis_text, readOnly = True, style={\
+        html.Div(dcc.Textarea(value = analysis_text, readOnly = True, style={ \
             "height": "300px", "width":"1200px"}), \
             style={"overflow": "scroll", "height": "300px", "width":"1200px", \
                                 "border": "1px solid"})
@@ -240,4 +240,4 @@ def update_lda_chart(year, fire_season, state_info):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug = False, port = 8051)
