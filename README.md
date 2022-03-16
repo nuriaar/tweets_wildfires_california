@@ -18,7 +18,7 @@ Once the three steps above are executed, one can interact with the application o
 
 The prior two apply to all 4 visualizations, while the last filter only applies to the wordcloud and LDA. This allows the user to (1) locate the fires, (2) look at the tweet intensity compared to the wildfire intensity, and (3) get an overview of the discussed topics.
 
-*Note:* please keep in mind the applications takes a few seconds to load, especially when loading tweets from all over the USA. 
+*Note:* Please keep in mind the applications takes a few seconds to load, especially when loading tweets from all over the USA. 
 
 ### Interacting with the API
 
