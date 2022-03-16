@@ -19,6 +19,7 @@ def retrieve_topics(tweets):
 
     vect = TfidfVectorizer(max_features = 1000)
     vect_text = vect.fit_transform(tweets['Text'].astype(str))
+    idf = vect.idf_
     lda_model = LatentDirichletAllocation(n_components = 3, max_iter = 1)
     lda_top = lda_model.fit_transform(vect_text)
     features = vect.get_feature_names_out()
