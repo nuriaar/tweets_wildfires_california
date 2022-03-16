@@ -61,6 +61,7 @@ logo_image = base64.b64encode(open(logo_file_path,\
 analysis_filepath = "ui/analysis.txt"
 with open(analysis_filepath) as f:
     analysis_text = f.readlines()
+analysis_text = ''.join(analysis_text)
 
 # Initialising the app
 app = dash.Dash(__name__)
@@ -181,7 +182,7 @@ app.layout = html.Div(
             ), style={"overflow": "scroll", "height": "1050px", "width":"1200px", \
                     "border": "1px solid"})]
         ),
-        html.Div(dcc.Textarea(value = analysis_text, style={\
+        html.Div(dcc.Textarea(value = analysis_text, readOnly = True, style={\
             "height": "300px", "width":"1200px"}), \
             style={"overflow": "scroll", "height": "300px", "width":"1200px", \
                                 "border": "1px solid"})
