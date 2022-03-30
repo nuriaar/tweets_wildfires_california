@@ -1,5 +1,13 @@
 # Larry on Fire
 
+The goal of this project is to give the user the ability to visualize when people tweet about the California wildfires (when they care about them) and what they tweet about (what their concerns are). Our application does this by allowing users to analyze the evolution over time (2015-2020) while offering several filters to interact with the data.
+
+More precisely, it allows a user to analyze the social conversations taking place on 
+Twitter around the California wildfires with several components that:
+1. Map the location of the most significant wildfires
+2. Compare the Twitter conversation volume with the wildfire intensity
+3. Showcase the main topics of the conversations
+
 ### Installing the Application
 
 1. Run `bash install.sh` in the top-level directory, this will install all required libraries in a virtual environment
